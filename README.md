@@ -21,3 +21,33 @@ The Thuenen_Atlas project integrates different customizations which are tracked 
 
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-mapstore-client.git
+
+## Building the project
+
+Build and run:
+
+```sh
+# the build will take quite a while
+docker compose build .
+# start geonode detached
+docker compose up -d
+# once running you can follow the logs
+docker compose logs -f
+```
+
+## Useful Docker Commands
+
+Stop all containers of the `sudanext` setup:
+
+```sh
+# either via docker compose
+docker compose down
+# or directly via docker
+docker stop $(docker ps -a --filter name=thuenen_atlas --format={{.Names}})
+```
+
+Remove all volumes of the `thuenen_atlas` setup:
+
+```sh
+docker volume rm $(docker volume ls --filter="name=thuenen_atlas" --format={{.Name}})
+```
