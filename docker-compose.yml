@@ -74,18 +74,18 @@ services:
     restart: on-failure
 
   # Gets and installs letsencrypt certificates
-  letsencrypt:
-    image: geonode/letsencrypt:4.0
-    build: ./docker/letsencrypt/
-    container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
-    environment:
-      - HTTPS_HOST=${HTTPS_HOST}
-      - HTTP_HOST=${HTTP_HOST}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
-    volumes:
-      - nginx-certificates:/geonode-certificates
-    restart: on-failure
+  # letsencrypt:
+  #   image: geonode/letsencrypt:4.0
+  #   build: ./docker/letsencrypt/
+  #   container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
+  #   environment:
+  #     - HTTPS_HOST=${HTTPS_HOST}
+  #     - HTTP_HOST=${HTTP_HOST}
+  #     - ADMIN_EMAIL=${ADMIN_EMAIL}
+  #     - LETSENCRYPT_MODE=${LETSENCRYPT_MODE}
+  #   volumes:
+  #     - nginx-certificates:/geonode-certificates
+  #   restart: on-failure
 
   # Geoserver backend
   geoserver:
@@ -151,23 +151,23 @@ services:
       - rabbitmq:/var/lib/rabbitmq
     restart: on-failure
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    # image: istresearch/jenkins:latest
-    container_name: jenkins4${COMPOSE_PROJECT_NAME}
-    user: jenkins
-    ports:
-      - '${JENKINS_HTTP_PORT}:${JENKINS_HTTP_PORT}'
-      - '${JENKINS_HTTPS_PORT}:${JENKINS_HTTPS_PORT}'
-      - '50000:50000'
-    # network_mode: "host"
-    volumes:
-      - jenkins_data:/var/jenkins_home
-      - backup-restore:/backup_restore
-      - data:/data
-    environment:
-      - 'JENKINS_OPTS=--httpPort=${JENKINS_HTTP_PORT} --httpsPort=${JENKINS_HTTPS_PORT} --prefix=/jenkins'
-    restart: on-failure
+  # jenkins:
+  #   image: jenkins/jenkins:lts
+  #   # image: istresearch/jenkins:latest
+  #   container_name: jenkins4${COMPOSE_PROJECT_NAME}
+  #   user: jenkins
+  #   ports:
+  #     - '${JENKINS_HTTP_PORT}:${JENKINS_HTTP_PORT}'
+  #     - '${JENKINS_HTTPS_PORT}:${JENKINS_HTTPS_PORT}'
+  #     - '50000:50000'
+  #   # network_mode: "host"
+  #   volumes:
+  #     - jenkins_data:/var/jenkins_home
+  #     - backup-restore:/backup_restore
+  #     - data:/data
+  #   environment:
+  #     - 'JENKINS_OPTS=--httpPort=${JENKINS_HTTP_PORT} --httpsPort=${JENKINS_HTTPS_PORT} --prefix=/jenkins'
+  #   restart: on-failure
 
 volumes:
   jenkins_data:
