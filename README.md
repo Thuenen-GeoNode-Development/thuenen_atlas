@@ -44,6 +44,12 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+## Using the Instance
+
+Open http://localhost in your favorite browser.
+
+The default admin login is `admin:admin`.
+
 ## Useful Docker Commands
 
 Stop all containers of the `thuenen_atlas` setup:
