@@ -22,6 +22,9 @@ The thuenen_Atlas project integrates different customizations which are tracked 
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-mapstore-client.git
 
+If a newer version of a contrib module needs to be integrated, the Docker build has to be repeated as the
+contrib modules have to be resolved at build time.
+
 ## Building the project
 
 Build and run:
