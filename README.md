@@ -17,7 +17,7 @@ The created project is tracked under git version control: https://github.com/Thu
 
 ## Project Customization
 
-The Thuenen_Atlas project integrates different customizations which are tracked at
+The thuenen_Atlas project integrates different customizations which are tracked at
 
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs
 - https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-mapstore-client.git
@@ -28,20 +28,20 @@ Build and run:
 
 ```sh
 # the build will take quite a while
-docker compose build .
+docker-compose build
 # start geonode detached
-docker compose up -d
+docker-compose up -d
 # once running you can follow the logs
-docker compose logs -f
+docker-compose logs -f
 ```
 
 ## Useful Docker Commands
 
-Stop all containers of the `sudanext` setup:
+Stop all containers of the `thuenen_atlas` setup:
 
 ```sh
 # either via docker compose
-docker compose down
+docker-compose down
 # or directly via docker
 docker stop $(docker ps -a --filter name=thuenen_atlas --format={{.Names}})
 ```
