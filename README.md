@@ -27,6 +27,12 @@ contrib modules have to be resolved at build time.
 
 ## Building the project
 
+Create a `.env` file that configures the services. You can copy from the sample:
+
+```sh
+$ cp .env.sample .env
+```
+
 Build and run:
 
 ```sh
