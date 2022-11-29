@@ -3,7 +3,7 @@
 # Exit script in case of error
 set -e
 
-INVOKE_LOG_STDOUT=${INVOKE_LOG_STDOUT:-FALSE}
+INVOKE_LOG_STDOUT=${INVOKE_LOG_STDOUT:-False}
 invoke () {
     if [ $INVOKE_LOG_STDOUT = 'true' ] || [ $INVOKE_LOG_STDOUT = 'True' ]
     then
@@ -61,7 +61,7 @@ then
 
     else
 
-        invoke devrequirements
+        #invoke devrequirements
         invoke statics
 
         echo "Executing standard Django server $cmd for Development"
