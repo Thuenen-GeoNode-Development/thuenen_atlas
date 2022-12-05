@@ -26,7 +26,7 @@ services:
       test: "echo \"I'm alive.\""
 
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
@@ -52,20 +52,20 @@ services:
   celery:
     restart: "no"
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     volumes:
       - './src:/usr/src/thuenen_atlas'
 
   geonode:
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     restart: "no"
 
   geoserver:
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     restart: "no"
     ports:
@@ -76,7 +76,7 @@ services:
 
   db:
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     restart: "no"
     ports:
@@ -84,6 +84,6 @@ services:
 
   rabbitmq:
     env_file:
-      - .devcontainer/.env
+      - .devcontainer/devcontainer.env
 
     restart: "no"
