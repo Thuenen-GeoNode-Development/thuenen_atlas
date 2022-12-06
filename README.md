@@ -50,7 +50,7 @@ An update can be done on running containers:
 # Re-build the GeoNode Container
 docker-compose build django --no-cache
 # Restart will pick the fresh image
-docker-compose up -d
+docker-compose up -d --force-recreate django celery
 ```
 
 ## Using the Instance
