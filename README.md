@@ -44,6 +44,15 @@ docker-compose up -d
 docker-compose logs -f
 ```
 
+Update the containers
+
+```sh
+# Re-build the GeoNode Container
+docker-compose build django
+# Restart will pick the fresh image
+docker-compose up -d
+```
+
 ## Using the Instance
 
 Open http://localhost in your favorite browser.
