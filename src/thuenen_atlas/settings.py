@@ -145,11 +145,7 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 # ADD THUENEN SPECIFIC APPLICATIONS
 
-<<<<<<< Updated upstream
-THUENEN_APPS = ( 'externalapplications','nonspatialdatasets',)
-=======
 THUENEN_APPS = ( 'externalapplications', 'nonspatialdatasets',)
->>>>>>> Stashed changes
 INSTALLED_APPS += THUENEN_APPS
 
 # configuration

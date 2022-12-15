@@ -67,16 +67,8 @@ RUN chmod +x /usr/bin/celery-cmd
 
 # # Install "geonode-contribs" apps
 RUN cd /usr/src; git clone https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs -b thuenen_dev
-<<<<<<< Updated upstream
 RUN cd /usr/src/geonode-contribs/externalapplications; pip install --upgrade  -e . 
 #    cd /usr/src/geonode-contribs/nonspatial; pip install --upgrade  -e .
-=======
-# # Install logstash and centralized dashboard dependencies
-RUN cd /usr/src/geonode-contribs/externalapplications; pip install --upgrade  -e . --src /usr/src \
-    cd /usr/src/geonode-contribs/non-spatial-datasets; pip install --upgrade  -e . --src /usr/src 
-#     cd /usr/src/geonode-contribs/geonode-logstash; pip install --upgrade  -e . \
-#     cd /usr/src/geonode-contribs/ldap; pip install --upgrade  -e .
->>>>>>> Stashed changes
 
 RUN pip install --upgrade --no-cache-dir  --src /usr/src -r requirements.txt
 RUN pip install --upgrade  -e .
