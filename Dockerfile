@@ -67,8 +67,8 @@ RUN chmod +x /usr/bin/celery-cmd
 
 # # Install "geonode-contribs" apps
 RUN cd /usr/src; git clone https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs -b thuenen_dev
-RUN cd /usr/src/geonode-contribs/externalapplications; pip install --upgrade  -e . 
-#    cd /usr/src/geonode-contribs/nonspatial; pip install --upgrade  -e .
+RUN cd /usr/src/geonode-contribs/externalapplications; pip install --upgrade  -e . \
+    cd /usr/src/geonode-contribs/nonspatial; pip install --upgrade  -e .
 
 RUN pip install --upgrade --no-cache-dir  --src /usr/src -r requirements.txt
 RUN pip install --upgrade  -e .
