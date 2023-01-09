@@ -2,10 +2,10 @@
 
 ## Project Genesis
 
-This GeoNode project was generated via the [official GeoNode template v4.x](https://github.com/GeoNode/geonode-project). To create this project we followed the steps:
+This GeoNode project was generated via the [official GeoNode template v4.0.x](https://github.com/GeoNode/geonode-project). To create this project we followed the steps:
 
 ```sh
-git clone https://github.com/GeoNode/geonode-project.git -b 4.x
+git clone https://github.com/GeoNode/geonode-project.git -b 4.0.x
 source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 mkvirtualenv --python=/usr/bin/python3 thuenen
 # Prompt gets prefixed with the active environment
