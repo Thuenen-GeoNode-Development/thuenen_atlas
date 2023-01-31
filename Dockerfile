@@ -64,6 +64,8 @@ RUN chmod +x /usr/bin/celery-commands
 COPY src/celery-cmd /usr/bin/celery-cmd
 RUN chmod +x /usr/bin/celery-cmd
 
+RUN cd /usr/src/ && git clone https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs -b thuenen_dev
+
 RUN pip install --upgrade --no-cache-dir  --src /usr/src -r requirements.txt
 RUN pip install --upgrade  -e .
 

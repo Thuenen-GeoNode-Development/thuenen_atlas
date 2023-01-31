@@ -166,6 +166,7 @@ SIZE_RESTRICTED_FILE_UPLOAD_ELEGIBLE_URL_NAMES += ('importer_upload',)
 
 IMPORTER_HANDLERS = os.getenv('IMPORTER_HANDLERS', [
     'importer.handlers.gpkg.handler.GPKGFileHandler',
+    'importer.handlers.datapackage.handler.DataPackageFileHandler',
     'importer.handlers.geojson.handler.GeoJsonFileHandler',
     'importer.handlers.shapefile.handler.ShapeFileHandler',
     'importer.handlers.kml.handler.KMLFileHandler',
