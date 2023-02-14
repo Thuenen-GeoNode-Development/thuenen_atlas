@@ -96,7 +96,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
@@ -108,7 +108,7 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["console"], "level": "ERROR", },
+            "handlers": ["console"], "level": "INFO", },
         "geonode": {
             "handlers": ["console"], "level": "INFO", },
         "geoserver-restconfig.catalog": {
@@ -118,7 +118,7 @@ LOGGING = {
         "pycsw": {
             "handlers": ["console"], "level": "ERROR", },
         "celery": {
-            "handlers": ["console"], "level": "DEBUG", },
+            "handlers": ["console"], "level": "INFO", },
         "mapstore2_adapter.plugins.serializers": {
             "handlers": ["console"], "level": "DEBUG", },
         "geonode_logstash.logstash": {

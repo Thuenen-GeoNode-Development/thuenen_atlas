@@ -67,3 +67,5 @@ local_settings.py
 Vagrantfile
 /.env
 src/celerybeat-schedule
+src/geoserver/
+src/worker.state
