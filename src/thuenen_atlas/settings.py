@@ -145,10 +145,6 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 
 INSTALLED_APPS += ('dynamic_models', 'importer', 'importer.handlers',)
-MAPSTORE_TRANSLATIONS_PATH = os.environ.get('MAPSTORE_TRANSLATIONS_PATH', [
-        '/static/mapstore/ms-translations',
-        '/static/mapstore/gn-translations',
-        '/static/mapstore/importer-translations'])
 
 CELERY_TASK_QUEUES += (
     Queue('importer.import_orchestrator', GEONODE_EXCHANGE, routing_key='importer.import_orchestrator'),
