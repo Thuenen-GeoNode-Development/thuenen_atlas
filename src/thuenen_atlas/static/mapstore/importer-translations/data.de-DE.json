@@ -1,0 +1,10 @@
+{
+    "locale": "de-DE",
+    "messages": {
+        "gnhome": {
+            "importer": {
+                "tabular": "Tabellarisch"
+            }
+        }
+    }
+}
