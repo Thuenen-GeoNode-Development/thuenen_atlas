@@ -1,4 +1,3 @@
--e git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-mapstore-client.git@thuenen_dev#egg=django_geonode_mapstore_client
+-e git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-mapstore-client.git@thuenen_nonspatial#egg=django_geonode_mapstore_client
 -e git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-importer.git@thuenen_datapackage-handler#egg=geonode_importer
-git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode.git@thuenen_datapackage-handler#egg=GeoNode
-
+-e git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode.git@thuenen_datapackage-handler#egg=GeoNode
