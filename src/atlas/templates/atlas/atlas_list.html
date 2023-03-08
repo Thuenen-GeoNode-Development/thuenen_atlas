@@ -1,0 +1,129 @@
+{% extends "geonode_base.html" %}
+{% block extra_head %}
+
+    {#    get super head block data #}
+    {{ block.super }}
+    <style type="text/css">
+        {#    overwrite jumbotron container background data#}
+        /* atlas app */
+        {% if custom_theme.jumbotron_color %}
+            .jumbotron {
+                background-color: {{ custom_theme.jumbotron_color }}
+            }
+        {% endif %}
+
+        {% if custom_theme.jumbotron_title_color %}
+            .jumbotron h1,
+            .jumbotron h2,
+            .jumbotron h3 {
+                color: {{ custom_theme.jumbotron_title_color }}
+            }
+        {% endif %}
+
+        {% if custom_theme.jumbotron_text_color %}
+            .jumbotron p {
+                color: {{ custom_theme.jumbotron_text_color }}
+            }
+        {% endif %}
+
+        .bg-video {
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .block {
+        {#background: rgba(55,70,75,1);#}{#background: rgb(0,140,210);#} margin-top: 2em;
+            margin-bottom: 2em;
+            border-left-style: solid;
+            border-left-width: 20px;
+            border-left-color: rgb(0, 140, 210);
+        }
+
+        .atlastext {
+            font-size: 22px;
+        }
+
+        .blocktext {
+            margin-left: 2em;
+            margin-right: 2em;
+            line-height: 1.4;
+            text-align: left;
+            letter-spacing: -0.014em;
+            overflow-wrap: break-word;
+        {#color: rgb(0,140,210);#} color: rgb(55, 70, 75);
+        {#background: white;#}
+        }
+
+        #atlas-header {
+            text-align: center;
+        }
+    </style>
+{% endblock extra_head %}
+
+<title>{% block title %}Thünen-Atlanten{% endblock %}</title>
+
+{% block middle %}
+    {% block hero %}
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Die Thünen-Atlanten</h1>
+                <h3>Forschungsergebnisse für jedermann aufbereitet</h3>
+            </div>
+        </div>
+    {% endblock hero %}
+
+    {% block body %}
+        <div class="container">
+            <p class="atlastext">Am Thünen-Institut erheben wir Geodaten zu Feldern, Wäldern und Meeren – oft
+                deutschlandweit oder darüber hinaus. Diese Daten erlauben es zum Beispiel, mithilfe von Übersichtskarten
+                die waldökologischen Naturräume Deutschlands darzustellen oder zu zeigen, wie sich Landnutzung und
+                Viehhaltung in den vergangenen 20 Jahren verändert haben. Mehr noch: Durch das Übereinanderlegen und
+                Kombinieren ganz unterschiedlicher Datensätze wird es möglich, bestimmte Zusammenhänge überhaupt erst zu
+                erkennen und zu bewerten, um so Schlussfolgerungen ziehen und Handlungsbedarf ableiten zu können.</p>
+            <div class="text-center">
+                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample"
+                   aria-expanded="false" aria-controls="collapseExample">
+                    <i class="glyphicon glyphicon-chevron-down lighter"></i> Mehr Informationen
+                </a>
+            </div>
+        </div>
+        <div class="collapse container" id="collapseExample">
+            <div class="container block">
+                <h2 class="blocktext">Wie verändert sich die Landnutzung in Deutschland? In welchem Bundesland gibt es
+                    die
+                    meisten Milchkühe? Welche Baumarten sind in deutschen Wäldern häufig, welche selten? Wie viel
+                    Kohlenstoff speichern die Waldböden?</h2>
+            </div>
+            <p class="atlastext">Diese und andere Fragen können wir detailliert beantworten, weil wir eine Vielzahl an
+                Daten zu Landwirtschaft, Forstwirtschaft und Fischerei sammeln und auswerten. Mit den Thünen-Atlanten
+                machen wir dieses Wissen in ausgewählten Karten für jedermann zugänglich.</p>
+            <div class="container block">
+                <h2 class="blocktext">Eine gute Datengrundlage ist die Voraussetzung für das Abschätzen von Trends und
+                    Politikfolgen.</h2>
+            </div>
+
+        </div>
+
+        <div class="container">
+            <h1 id="atlas-header">Atlanten</h1>
+            <div class="row">
+                <a id="atlanten"></a>
+                {% for atlas in object_list %}
+                    <div class="col-sm-12 col-md-6">
+                        <div class="thumbnail">
+                            <a href="{{ atlas.slug }}">
+                                <img src="{{ atlas.thumbnail.url }}">
+                                <div class="caption">
+                                    <h3>{{ atlas.name }}</h3>
+                                    <p>{{ atlas.primer }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
+
+{% endblock middle %}
