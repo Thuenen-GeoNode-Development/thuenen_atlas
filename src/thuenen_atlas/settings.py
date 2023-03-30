@@ -143,6 +143,7 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
 
 
+# ADD THUENEN SPECIFIC CONFIGURATION
 
 INSTALLED_APPS += ('dynamic_models', 'importer', 'importer.handlers',)
 
@@ -173,10 +174,7 @@ IMPORTER_HANDLERS = os.getenv('IMPORTER_HANDLERS', [
     'importer.handlers.geotiff.handler.GeoTiffFileHandler'
 ])
 
-# ADD THUENEN SPECIFIC APPLICATIONS
-
 THUENEN_APPS = ( 'externalapplications', )
 INSTALLED_APPS += THUENEN_APPS
 
-# # configuration
 EXTERNAL_APPLICATION_MENU_FILTER_AUTOCREATE = os.getenv('EXTERNAL_APPLICATION_MENU_FILTER_AUTOCREATE', False)

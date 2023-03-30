@@ -64,10 +64,13 @@ RUN chmod +x /usr/bin/celery-commands
 COPY src/celery-cmd /usr/bin/celery-cmd
 RUN chmod +x /usr/bin/celery-cmd
 
-RUN cd /usr/src/ && git clone https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs -b thuenen_dev
+RUN cd /usr/src/ ; git clone https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-contribs -b thuenen_dev
 
-RUN cd /usr/src/geonode-contribs/externalapplications; pip install --upgrade  -e . 
-RUN cd /usr/src/geonode-contribs/importer-datapackage; pip install --upgrade  -e .
+RUN cd /usr/src/geonode-contribs/externalapplications ; pip install --upgrade  -e .
+
+# install geonode-importer and datapackage handler
+RUN pip install --upgrade --src /usr/src -e git+https://github.com/Thuenen-52North-Erweiterung-GeoNode/geonode-importer.git@allow-nonspatial-layer-import#egg=geonode_importer
+RUN cd /usr/src/geonode-contribs/importer-datapackage ; pip install --upgrade  -e .
 
 RUN pip install --upgrade --no-cache-dir  --src /usr/src -r requirements.txt
 RUN pip install --upgrade  -e .
