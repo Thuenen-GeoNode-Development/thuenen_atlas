@@ -8,7 +8,7 @@
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
 	"dockerComposeFile": [
 		"../docker-compose.yml",
-		"docker-compose.yml"
+		"./docker-compose.yml"
 	],
 
 	// The 'service' property is the name of the service for the container that VS Code should
@@ -20,27 +20,30 @@
 	"workspaceFolder": "/usr/src/thuenen_atlas",
 
 	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"terminal.integrated.profiles.linux": {
-			"/bin/bash": {
-				"path": "/bin/bash",
-				"args": [
-					"-l"
-				]
-			}
-		},
-		"terminal.integrated.defaultProfile.linux": "/bin/bash"
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.profiles.linux": {
+					"/bin/bash": {
+						"path": "/bin/bash",
+						"args": [
+							"-l"
+						]
+					}
+				},
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"batisteo.vscode-django",
+				"mrorz.language-gettext",
+				"eamodio.gitlens", // Note: User preference
+				"bigonesystems.django" // Note: User preference
+			]
+		}
 	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-python.python",
-		"batisteo.vscode-django",
-		"mrorz.language-gettext",
-		"eamodio.gitlens", // Note: User preference
-		"bigonesystems.django" // Note: User preference
-	],
-
+	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
 		8000,
