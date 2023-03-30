@@ -181,7 +181,7 @@
         ];
 
         const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
-    window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
+        window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
             
             var pluginPageName = "catalogue";
             var selectedPluginName = "ResourcesGrid";
@@ -193,6 +193,19 @@
                     // apply configuration to the plugin
                     const plugin = localConfig.plugins[pluginPageName][i];
 
+                    const filters = resourcesGridPluginFiltersFormItems[0].items;
+                    const datasetFilters = filters.filter(item => item.id == 'dataset');
+                    if (datasetFilters) {
+                        datasetFilters[0].items.push({
+                            "id": "store-tabular",
+                            "labelId": "gnhome.tabular",
+                            "type": "filter",
+                            "query": {
+                                "filter{subtype.in}": "tabular"
+                            }
+                        });
+                    }
+
                     plugin.cfg.filtersFormItems = resourcesGridPluginFiltersFormItems;
                     plugin.cfg.menuItems = resourceGridPluginMenuItems;
                 }
@@ -201,7 +214,7 @@
             return overrideLocalConfig 
                 ? overrideLocalConfig(localConfig, _)
                 : localConfig;
-    };
+        };
     })();
 </script>
 {% endblock %}
