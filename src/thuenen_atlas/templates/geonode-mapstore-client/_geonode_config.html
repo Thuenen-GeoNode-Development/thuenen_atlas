@@ -67,7 +67,7 @@
             }
         ]
 
-        const resourcesGridPluginFiltersFormItems = [
+        const resourcesGridPluginCustomFilters = [
             {
                 type: 'group',
                 labelId: 'gnhome.customFiltersTitle',
@@ -180,6 +180,15 @@
             }
         ];
 
+        const addFilterTo = (filters=[], filterToAdd, groupId="") => {
+            const filterGroup = groupId 
+                ? filters.filter(item => item.id == groupId)
+                : filters;
+            if (filterGroup) {
+                filterGroup.push(filterToAdd);
+            }
+        }
+
         const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
         window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
             
@@ -192,22 +201,26 @@
                 if (isSelectedPlugin) {
                     // apply configuration to the plugin
                     const plugin = localConfig.plugins[pluginPageName][i];
+                    const filterItems = resourcesGridPluginCustomFilters[0].items
+                    addFilterTo(filterItems, {
+                        "id": "store-tabular",
+                        "labelId": "gnhome.tabular",
+                        "type": "filter",
+                        "query": {
+                            "filter{subtype.in}": "tabular"
+                        }
+                    }, 'dataset');
 
-                    const filters = resourcesGridPluginFiltersFormItems[0].items;
-                    const datasetFilters = filters.filter(item => item.id == 'dataset');
-                    if (datasetFilters) {
-                        datasetFilters[0].items.push({
-                            "id": "store-tabular",
-                            "labelId": "gnhome.tabular",
-                            "type": "filter",
-                            "query": {
-                                "filter{subtype.in}": "tabular"
-                            }
-                        });
-                    }
-
-                    plugin.cfg.filtersFormItems = resourcesGridPluginFiltersFormItems;
+                    plugin.cfg.filtersFormItems = resourcesGridPluginCustomFilters;
                     plugin.cfg.menuItems = resourceGridPluginMenuItems;
+
+                    const tabs = plugin.cfg.detailsTabs || [];
+                    tabs.push({
+                        "type": "tab",
+                        "id": "attributes",
+                        "labelId": "gnviewer.attributes",
+                        "items": "{context.getFeatureCatalogueItems(state('gnResourceData'))}"
+                    });
                 }
             }
 
