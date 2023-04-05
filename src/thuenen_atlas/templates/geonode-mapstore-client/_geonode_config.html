@@ -216,10 +216,9 @@
 
                     const tabs = plugin.cfg.detailsTabs || [];
                     tabs.push({
-                        "type": "tab",
+                        "type": "attribute_table",
                         "id": "attributes",
-                        "labelId": "gnviewer.attributes",
-                        "items": "{context.getFeatureCatalogueItems(state('gnResourceData'))}"
+                        "labelId": "gnviewer.attributes"
                     });
                 }
             }
