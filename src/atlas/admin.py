@@ -7,7 +7,7 @@ from .models import Atlas, CustomApplication, AtlasCustomAppListing
 
 class AtlasAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    filter_horizontal = ('maps', 'datasets', 'documents', 'geoApps')
+    filter_horizontal = ('resource',)
 
 
 # class CustomApplicationAdmin(admin.ModelAdmin):

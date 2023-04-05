@@ -19,7 +19,12 @@
 #########################################################################
 
 from geonode.urls import urlpatterns
-
+#from django.conf.urls import url, include
+# Hier liste von Flo reinmachen und urlpattern erweitern
+#urlpatterns += [
+    ## include your urls here
+#    url(r'^atlanten/', include('atlas.urls')),
+#]
 '''
 # You can register your own urlpatterns here
 urlpatterns = [

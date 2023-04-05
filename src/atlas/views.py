@@ -19,3 +19,17 @@ class AtlasDetail(DetailView):
 class AtlasList(ListView):
     model = Atlas
 
+from django.views.generic.base import TemplateView
+class AtlasView(TemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = Atlas.objects.all()
+        return context
+    
+class AtlasDetailView(TemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = Atlas.objects.all()
+        return context

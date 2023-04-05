@@ -37,13 +37,14 @@ class Atlas(models.Model):
     group = models.ManyToManyField(GroupProfile, related_name='group_collections', null=True, blank=True)
 
     # each of those should only contain the appropriate resource type
-    maps = models.ManyToManyField(Map, related_name='map_collections', null=True, blank=True)
-    geoApps = models.ManyToManyField(GeoApp, related_name='geoapp_collections', null=True, blank=True)
-    datasets = models.ManyToManyField(Dataset, related_name='dataset_collections', null=True, blank=True)
-    documents = models.ManyToManyField(Document, related_name='document_collections', null=True, blank=True)
+    #maps = models.ManyToManyField(Map, related_name='map_collections', null=True, blank=True)
+    #geoApps = models.ManyToManyField(GeoApp, related_name='geoapp_collections', null=True, blank=True)
+    #datasets = models.ManyToManyField(Dataset, related_name='dataset_collections', null=True, blank=True)
+    #documents = models.ManyToManyField(Document, related_name='document_collections', null=True, blank=True)
+    resource = models.ManyToManyField(ResourceBase, related_name='resource_collections', null=True, blank=True)
 
-    customApps = models.ManyToManyField(CustomApplication, related_name='customApp_collections', null=True, blank=True,
-                                        through='AtlasCustomAppListing')
+    #customApps = models.ManyToManyField(CustomApplication, related_name='customApp_collections', null=True, blank=True,
+    #                                    through='AtlasCustomAppListing')
 
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(max_length=128, unique=True)
