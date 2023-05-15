@@ -19,6 +19,9 @@ RUN cd /usr/local/tomcat/webapps \
     && rm geoserver.war \
     && mkdir -p $GEOSERVER_DATA_DIR
 
+# INSTALL PLUGINS
+COPY ./plugins /usr/local/tomcat/webapps/geoserver/WEB-INF/lib
+
 VOLUME $GEOSERVER_DATA_DIR
 
 # added by simonelanucara https://github.com/simonelanucara

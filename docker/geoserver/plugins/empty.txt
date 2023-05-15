@@ -1,0 +1,1 @@
+this will be deleted, if custom GeoServer plugins are installed
