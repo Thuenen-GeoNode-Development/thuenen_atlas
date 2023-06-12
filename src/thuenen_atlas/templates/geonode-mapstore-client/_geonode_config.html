@@ -181,11 +181,15 @@
         ];
 
         const addFilterTo = (filters=[], filterToAdd, groupId="") => {
-            const filterGroup = groupId 
-                ? filters.filter(item => item.id == groupId)
-                : filters;
-            if (filterGroup) {
-                filterGroup.push(filterToAdd);
+            if (groupId) {
+                filterGroup = filters.filter(item => item.id == groupId)
+                if (filterGroup) {
+                    filterGroup[0].items.push(filterToAdd);
+                }
+                return filters;
+            } else {
+                filters.push(filterToAdd);
+                return filters;
             }
         }
 
@@ -201,8 +205,7 @@
                 if (isSelectedPlugin) {
                     // apply configuration to the plugin
                     const plugin = localConfig.plugins[pluginPageName][i];
-                    const filterItems = resourcesGridPluginCustomFilters[0].items
-                    addFilterTo(filterItems, {
+                    const filterItems = addFilterTo(resourcesGridPluginCustomFilters[0].items, {
                         "id": "store-tabular",
                         "labelId": "gnhome.tabular",
                         "type": "filter",
@@ -210,6 +213,9 @@
                             "filter{subtype.in}": "tabular"
                         }
                     }, 'dataset');
+
+                    // override filterItems
+                    resourcesGridPluginCustomFilters[0].items = filterItems;
 
                     plugin.cfg.filtersFormItems = resourcesGridPluginCustomFilters;
                     plugin.cfg.menuItems = resourceGridPluginMenuItems;
