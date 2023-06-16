@@ -206,16 +206,19 @@
                     // apply configuration to the plugin
                     const plugin = localConfig.plugins[pluginPageName][i];
                     const filterItems = addFilterTo(resourcesGridPluginCustomFilters[0].items, {
-                        "id": "store-tabular",
+                        "id": "tabular",
                         "labelId": "gnhome.tabular",
                         "type": "filter",
-                        "query": {
-                            "filter{subtype.in}": "tabular"
-                        }
+                        
                     }, 'dataset');
 
                     // override filterItems
                     resourcesGridPluginCustomFilters[0].items = filterItems;
+                    localConfig.geoNodeCustomFilters = Object.assign(localConfig.geoNodeCustomFilters, {
+                        "tabular": {
+                            "filter{subtype.in}": "tabular"
+                        }
+                    });
 
                     plugin.cfg.filtersFormItems = resourcesGridPluginCustomFilters;
                     plugin.cfg.menuItems = resourceGridPluginMenuItems;
