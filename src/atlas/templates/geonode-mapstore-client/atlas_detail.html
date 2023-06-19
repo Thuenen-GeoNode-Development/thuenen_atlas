@@ -9,26 +9,6 @@
     {#    get super head block data #}
     {{ block.super }}
     <style type="text/css">
-        {#    overwrite jumbotron container background data#}
-        {% if custom_theme.jumbotron_color %}
-            .th-atlas .jumbotron {
-                background-color: {{ custom_theme.jumbotron_color }}
-            }
-        {% endif %}
-
-        {% if custom_theme.jumbotron_title_color %}
-            .th-atlas .jumbotron h1,
-            .th-atlas .jumbotron h2,
-            .th-atlas .jumbotron h3 {
-                color: {{ custom_theme.jumbotron_title_color }}
-            }
-        {% endif %}
-
-        {% if custom_theme.jumbotron_text_color %}
-            .th-atlas .jumbotron p {
-                color: {{ custom_theme.jumbotron_text_color }}
-            }
-        {% endif %}
 
         #wrap {
             margin-top: 0;
@@ -39,12 +19,13 @@
             font-family: 'Lato', sans-serif;
         }
 
-        .th-atlas .jumbotron {
+        .gn-theme .th-atlas .jumbotron {
             position: relative;
             background-image: url({{ object.jumbotronBackgroundImage.url }}) !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
             background-size: cover !important;
+            background-color: var(--gn-jumbotron-bg);
             opacity: 1;
             top: 0;
             left: 0;
@@ -52,6 +33,12 @@
             right: 0;
             z-index: 0;
             height: 500px;
+        }
+
+        .jumbotron h1,
+        .jumbotron h2,
+        .jumbotron h3 {
+            color: var(--jumbotron-color);
         }
 
         .th-atlas #primertext {
@@ -114,106 +101,120 @@
 
 <title>{% block title %}{{ object.name }}{% endblock %}</title>
 {% block middle %}
+<div class="gn-theme">
 
-<div class="th-atlas">
-    {% block hero %}
-        <div class="jumbotron">
-            <div class="jumbovidtext_container text-center">
-                <h1>{{ object.name }}</h1>
-            </div>
-        </div>
-    {% endblock hero %}
-
-    {% block body %}
-        <div class="container">
-            {% createResourceArrays object.resource.all as resourceTypes %}
-            <h1 id="primertext">{{ object.primer }}</h1>
-
-            <!--        hyperlink to: media, data, apps-->
-            <div class="quicklinks">
-                <div class="container text-center">
-                    <ul class="list-inline">
-                        <li>Quicklinks |</li>
-                        {% if resourceTypes.maps|length > 0 %}
-                            <li><a href="#apps">Kartenanwendungen</a></li>
-                        {% endif %}
-                        {% if resourceTypes.datasets|length > 0 %}
-                            <li><a href="#datasets">Datensätze</a></li>
-                        {% endif %}
-                        {% if resourceTypes.documents|length > 0 %}
-                            <li><a href="#media">Dokumente &#38; Medien</a></li>
-                        {% endif %}
-                    </ul>
+    <div class="th-atlas">
+        {% block hero %}
+            <div class="jumbotron">
+                <div class="jumbovidtext_container text-center">
+                    <h1>{{ object.name }}</h1>
                 </div>
             </div>
+        {% endblock hero %}
 
-            <div class="content">
+        {% block body %}
+            <div class="container">
+                {% createResourceArrays object.resource.all as resourceTypes %}
+                <h1 id="primertext">{{ object.primer }}</h1>
 
-                {{ object.content|safe }}
-            </div>
+                <!--        hyperlink to: media, data, apps-->
+                <div class="quicklinks">
+                    <div class="container text-center">
+                        <ul class="list-inline">
+                            <li>Quicklinks |</li>
+                            {% if resourceTypes.maps|length > 0 %}
+                                <li><a href="#apps">Kartenanwendungen</a></li>
+                            {% endif %}
+                            {% if resourceTypes.datasets|length > 0 %}
+                                <li><a href="#datasets">Datensätze</a></li>
+                            {% endif %}
+                            {% if resourceTypes.documents|length > 0 %}
+                                <li><a href="#media">Dokumente &#38; Medien</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
 
-            <div>
-            {% if resourceTypes.maps|length > 0 %}
-                <h3><a name="apps"></a>Kartenanwendungen</h3>
-                <p style="font-size: 20px;">Für die hier gezeigten Karten werden Datensätze aus dem 
-                    Thünen-Atlas thematisch zusammengestellt und aufbereitet.</p>
-                <div class="row">
-                    {% for map in resourceTypes.maps|dictsort:"title" %}
+                <div class="content">
+
+                    {{ object.content|safe }}
+                </div>
+
+                <div>
+                {% if resourceTypes.maps|length > 0 %}
+                    <h3><a name="apps"></a>Kartenanwendungen</h3>
+                    <p style="font-size: 20px;">Für die hier gezeigten Karten werden Datensätze aus dem 
+                        Thünen-Atlas thematisch zusammengestellt und aufbereitet.</p>
+                    <div class="row">
+                        {% for map in resourceTypes.maps|dictsort:"title" %}
+                            <div class="card col-sm-4">
+                                <a href="{{ map.detail_url }}">
+                                    <div class="thumbnail">
+                                        <img src="{{ map.thumbnail_url }}" />
+                                        <div class="caption text-center">
+                                            <h3 id="thumbnail-label">{{ map.title }}</h3>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if resourceTypes.datasets|length > 0 %}
+                    <h3><a name="datasets"></a>Datensätze</h3>
+                    <p style="font-size: 20px;">Grundlage der Karten sind die Datensätze des Thünen-Atlasses.
+                        Jeder Datensatz enthält beschreibende Informationen und kann entweder direkt oder über
+                        eine Anfrage heruntergeladen werden. Hier zeigen wir eine Auswahl der aktuellsten
+                        Datensätze zum Thema dieses Atlasses.</p>
+                    <div class="row">
+                        {% for layer in resourceTypes.datasets|dictsort:"title" %}
                         <div class="card col-sm-4">
-                            <a href="{{ map.detail_url }}">
+                            <a href="{{ layer.detail_url }}">
                                 <div class="thumbnail">
-                                    <img src="{{ map.thumbnail_url }}" />
+                                    <img src="{{ layer.thumbnail_url }}" />
                                     <div class="caption text-center">
-                                        <h3 id="thumbnail-label">{{ map.title }}</h3>
+                                        <h3 id="thumbnail-label">{{ layer.title }}</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% if resourceTypes.datasets|length > 0 %}
-                <h3><a name="datasets"></a>Datensätze</h3>
-                <p style="font-size: 20px;">Grundlage der Karten sind die Datensätze des Thünen-Atlasses.
-                    Jeder Datensatz enthält beschreibende Informationen und kann entweder direkt oder über
-                    eine Anfrage heruntergeladen werden. Hier zeigen wir eine Auswahl der aktuellsten
-                    Datensätze zum Thema dieses Atlasses.</p>
-                <div class="row">
-                    {% for layer in resourceTypes.datasets|dictsort:"title" %}
-                    <div class="card col-sm-4">
-                        <a href="{{ layer.detail_url }}">
-                            <div class="thumbnail">
-                                <img src="{{ layer.thumbnail_url }}" />
-                                <div class="caption text-center">
-                                    <h3 id="thumbnail-label">{{ layer.title }}</h3>
-                                </div>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% if resourceTypes.documents|length > 0 %}
-                <h3><a name="media"></a>Medien</h3>
-                <div class="row">
-                    {% for document in resourceTypes.documents|dictsort:"title" %}
-                    <div class="card col-sm-4">
-                        <a href="{{ document.detail_url }}">
-                            <div class="thumbnail">
-                                <img src="{{ document.thumbnail_url }}" />
-                                <div class="caption text-center">
-                                    <h3 id="thumbnail-label">{{ document.title }}</h3>
-                                </div>
-                            </div>
-                        </a>
+                    <div>
+                        <p style="font-size: 22px">
+                            <a href="/layers/?limit=50&offset=0&group__group_profile__slug__in={{ atlas_group.slug }}">
+                                Weitere thematisch zugehörige Datensätze</a>
+                        </p>
                     </div>
-                    {% endfor %}
-                </div>
             {% endif %}
-        </div>
-    {% endblock %}
 
+                {% if resourceTypes.documents|length > 0 %}
+                    <h3><a name="media"></a>Medien</h3>
+                    <div class="row">
+                        {% for document in resourceTypes.documents|dictsort:"title" %}
+                        <div class="card col-sm-4">
+                            <a href="{{ document.detail_url }}">
+                                <div class="thumbnail">
+                                    <img src="{{ document.thumbnail_url }}" />
+                                    <div class="caption text-center">
+                                        <h3 id="thumbnail-label">{{ document.title }}</h3>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div>
+                    <p style="font-size: 22px">
+                        <a href="/documents/?limit=50&offset=0&group__group_profile__slug__in={{ atlas_group.slug }}">
+                            Weitere thematisch zugehörige Dokumente und Medien</a>
+                    </p>
+                </div>
+            </div>
+        {% endblock %}
+
+    </div>
 </div>
 {% endblock middle %}

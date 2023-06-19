@@ -4,29 +4,19 @@
     {#    get super head block data #}
     {{ block.super }}
     <style type="text/css">
-        
-        {% if custom_theme.jumbotron_color %}
-            .jumbotron {
-                background-color: {{ custom_theme.jumbotron_color }}
-            }
-        {% endif %}
-
-        {% if custom_theme.jumbotron_title_color %}
-            .jumbotron h1,
-            .jumbotron h2,
-            .jumbotron h3 {
-                color: {{ custom_theme.jumbotron_title_color }}
-            }
-        {% endif %}
-
-        {% if custom_theme.jumbotron_text_color %}
-            .jumbotron p {
-                color: {{ custom_theme.jumbotron_text_color }}
-            }
-        {% endif %}
 
         #wrap {
             margin-top: 0;
+        }
+
+        .gn-theme .th-atlas .jumbotron {
+            background-color: var(--gn-jumbotron-bg);
+        }
+
+        .jumbotron h1,
+        .jumbotron h2,
+        .jumbotron h3 {
+            color: var(--jumbotron-color);
         }
 
         .th-atlas {
@@ -79,68 +69,70 @@
 <title>{% block title %}Thünen-Atlanten{% endblock %}</title>
 
 {% block middle %}
-<div class="th-atlas">
-    {% block hero %}
-        <div class="jumbotron">
+<div class="gn-theme">
+    <div class="th-atlas">
+        {% block hero %}
+            <div class="jumbotron">
+                <div class="container">
+                    <h1>Die Thünen-Atlanten</h1>
+                    <h3>Forschungsergebnisse für jedermann aufbereitet</h3>
+                </div>
+            </div>
+        {% endblock hero %}
+
+        {% block body %}
             <div class="container">
-                <h1>Die Thünen-Atlanten</h1>
-                <h3>Forschungsergebnisse für jedermann aufbereitet</h3>
+                <p class="atlastext">Am Thünen-Institut erheben wir Geodaten zu Feldern, Wäldern und Meeren – oft
+                    deutschlandweit oder darüber hinaus. Diese Daten erlauben es zum Beispiel, mithilfe von Übersichtskarten
+                    die waldökologischen Naturräume Deutschlands darzustellen oder zu zeigen, wie sich Landnutzung und
+                    Viehhaltung in den vergangenen 20 Jahren verändert haben. Mehr noch: Durch das Übereinanderlegen und
+                    Kombinieren ganz unterschiedlicher Datensätze wird es möglich, bestimmte Zusammenhänge überhaupt erst zu
+                    erkennen und zu bewerten, um so Schlussfolgerungen ziehen und Handlungsbedarf ableiten zu können.</p>
+                <div class="text-center">
+                    <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample">
+                        <i class="glyphicon glyphicon-chevron-down lighter"></i> Mehr Informationen
+                    </a>
+                </div>
             </div>
-        </div>
-    {% endblock hero %}
+            <div class="collapse container" id="collapseExample">
+                <div class="container block">
+                    <h2 class="blocktext">Wie verändert sich die Landnutzung in Deutschland? In welchem Bundesland gibt es
+                        die
+                        meisten Milchkühe? Welche Baumarten sind in deutschen Wäldern häufig, welche selten? Wie viel
+                        Kohlenstoff speichern die Waldböden?</h2>
+                </div>
+                <p class="atlastext">Diese und andere Fragen können wir detailliert beantworten, weil wir eine Vielzahl an
+                    Daten zu Landwirtschaft, Forstwirtschaft und Fischerei sammeln und auswerten. Mit den Thünen-Atlanten
+                    machen wir dieses Wissen in ausgewählten Karten für jedermann zugänglich.</p>
+                <div class="container block">
+                    <h2 class="blocktext">Eine gute Datengrundlage ist die Voraussetzung für das Abschätzen von Trends und
+                        Politikfolgen.</h2>
+                </div>
+            </div>
 
-    {% block body %}
-        <div class="container">
-            <p class="atlastext">Am Thünen-Institut erheben wir Geodaten zu Feldern, Wäldern und Meeren – oft
-                deutschlandweit oder darüber hinaus. Diese Daten erlauben es zum Beispiel, mithilfe von Übersichtskarten
-                die waldökologischen Naturräume Deutschlands darzustellen oder zu zeigen, wie sich Landnutzung und
-                Viehhaltung in den vergangenen 20 Jahren verändert haben. Mehr noch: Durch das Übereinanderlegen und
-                Kombinieren ganz unterschiedlicher Datensätze wird es möglich, bestimmte Zusammenhänge überhaupt erst zu
-                erkennen und zu bewerten, um so Schlussfolgerungen ziehen und Handlungsbedarf ableiten zu können.</p>
-            <div class="text-center">
-                <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample"
-                   aria-expanded="false" aria-controls="collapseExample">
-                    <i class="glyphicon glyphicon-chevron-down lighter"></i> Mehr Informationen
-                </a>
-            </div>
-        </div>
-        <div class="collapse container" id="collapseExample">
-            <div class="container block">
-                <h2 class="blocktext">Wie verändert sich die Landnutzung in Deutschland? In welchem Bundesland gibt es
-                    die
-                    meisten Milchkühe? Welche Baumarten sind in deutschen Wäldern häufig, welche selten? Wie viel
-                    Kohlenstoff speichern die Waldböden?</h2>
-            </div>
-            <p class="atlastext">Diese und andere Fragen können wir detailliert beantworten, weil wir eine Vielzahl an
-                Daten zu Landwirtschaft, Forstwirtschaft und Fischerei sammeln und auswerten. Mit den Thünen-Atlanten
-                machen wir dieses Wissen in ausgewählten Karten für jedermann zugänglich.</p>
-            <div class="container block">
-                <h2 class="blocktext">Eine gute Datengrundlage ist die Voraussetzung für das Abschätzen von Trends und
-                    Politikfolgen.</h2>
-            </div>
-        </div>
-
-        <div class="container">
-            <h1 id="atlas-header"></a>Atlanten</h1>
-            <div class="row">
-                {% for atlas in object_list|dictsort:"title" %}
-                    {% if atlas.public or user.is_authenticated %}
-                    <div class="card col-sm-12 col-md-6">
-                        <a href="{{ atlas.slug }}">
-                            <div class="thumbnail">
-                                <img src="{{ atlas.thumbnail.url }}">
-                                <div class="caption">
-                                    <h3>{{ atlas.name }}</h3>
-                                    <p>{{ atlas.primer }}</p>
+            <div class="container">
+                <h1 id="atlas-header"></a>Atlanten</h1>
+                <div class="row">
+                    {% for atlas in object_list|dictsort:"name" %}
+                        {% if atlas.public or user.is_authenticated %}
+                        <div class="card col-sm-12 col-md-6">
+                            <a href="{{ atlas.slug }}">
+                                <div class="thumbnail">
+                                    <img src="{{ atlas.thumbnail.url }}">
+                                    <div class="caption">
+                                        <h3>{{ atlas.name }}</h3>
+                                        <p>{{ atlas.primer }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                    {% endif %} 
-                {% endfor %}
+                            </a>
+                        </div>
+                        {% endif %} 
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% endblock %}
+        {% endblock %}
 
+    </div>
 </div>
 {% endblock middle %}
