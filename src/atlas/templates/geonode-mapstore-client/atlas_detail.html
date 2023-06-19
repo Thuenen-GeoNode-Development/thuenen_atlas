@@ -138,10 +138,10 @@
                             <li><a href="#apps">Kartenanwendungen</a></li>
                         {% endif %}
                         {% if resourceTypes.datasets|length > 0 %}
-                            <li><a href="#datasets">Datenebenen</a></li>
+                            <li><a href="#datasets">Datensätze</a></li>
                         {% endif %}
                         {% if resourceTypes.documents|length > 0 %}
-                            <li><a href="#media">Medien</a></li>
+                            <li><a href="#media">Dokumente &#38; Medien</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -155,8 +155,10 @@
             <div>
             {% if resourceTypes.maps|length > 0 %}
                 <h3><a name="apps"></a>Kartenanwendungen</h3>
+                <p style="font-size: 20px;">Für die hier gezeigten Karten werden Datensätze aus dem 
+                    Thünen-Atlas thematisch zusammengestellt und aufbereitet.</p>
                 <div class="row">
-                    {% for map in resourceTypes.maps %}
+                    {% for map in resourceTypes.maps|dictsort:"title" %}
                         <div class="card col-sm-4">
                             <a href="{{ map.detail_url }}">
                                 <div class="thumbnail">
@@ -172,9 +174,13 @@
             {% endif %}
 
             {% if resourceTypes.datasets|length > 0 %}
-                <h3><a name="datasets"></a>Datenebenen</h3>
+                <h3><a name="datasets"></a>Datensätze</h3>
+                <p style="font-size: 20px;">Grundlage der Karten sind die Datensätze des Thünen-Atlasses.
+                    Jeder Datensatz enthält beschreibende Informationen und kann entweder direkt oder über
+                    eine Anfrage heruntergeladen werden. Hier zeigen wir eine Auswahl der aktuellsten
+                    Datensätze zum Thema dieses Atlasses.</p>
                 <div class="row">
-                    {% for layer in resourceTypes.datasets %}
+                    {% for layer in resourceTypes.datasets|dictsort:"title" %}
                     <div class="card col-sm-4">
                         <a href="{{ layer.detail_url }}">
                             <div class="thumbnail">
@@ -192,7 +198,7 @@
             {% if resourceTypes.documents|length > 0 %}
                 <h3><a name="media"></a>Medien</h3>
                 <div class="row">
-                    {% for document in resourceTypes.documents %}
+                    {% for document in resourceTypes.documents|dictsort:"title" %}
                     <div class="card col-sm-4">
                         <a href="{{ document.detail_url }}">
                             <div class="thumbnail">
