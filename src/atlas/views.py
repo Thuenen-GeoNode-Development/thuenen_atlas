@@ -18,11 +18,9 @@ class AtlasDetail(DetailView):
             context["customApps"] = AtlasCustomAppListing.objects.filter(
                 atlas=context["atlas"]
             )
-            context["atlas_group"] = self.object.group.get()
             return context
         else:
             return HttpResponse(_("Not allowed"), status=403)
-        return context
 
 
 class AtlasList(ListView):
