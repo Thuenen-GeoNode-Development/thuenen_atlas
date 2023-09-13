@@ -67,7 +67,7 @@ LOGGING = {
     },
 }
 
-INSTALLED_APPS += ("thuenen_app",
-                   "atlas",
+INSTALLED_APPS += ("atlas",
                    "externalapplications",
-                   "importer_datapackage",)
+                   "importer_datapackage",
+                   "thuenen_app")
