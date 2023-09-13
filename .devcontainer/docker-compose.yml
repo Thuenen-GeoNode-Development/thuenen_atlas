@@ -6,10 +6,9 @@ services:
     healthcheck:
       test: "echo \"I'm alive.\""
 
-    env_file:
-      - .devcontainer/.env
-
-    # volumes:
+    volumes:
+      - ./.devcontainer/_gitignore:/usr/src/geonode/.gitignore
+      - ./.devcontainer/_vscode:/usr/src/geonode/.vscode
     #   # Update this to wherever you want VS Code to mount the folder of your project
     #   - './src:/usr/src/thuenen_atlas'
     #   - '../geonode:/usr/src/geonode'
@@ -26,29 +25,13 @@ services:
 
   celery:
     restart: "no"
-    env_file:
-      - .devcontainer/.env
     # volumes:
     #   - './src:/usr/src/geonode'
 
-  geonode:
-    env_file:
-      - .devcontainer/.env
-
   geoserver:
-    env_file:
-      - .devcontainer/.env
-
     ports:
       - "8080:8080"
 
   db:
-    env_file:
-      - .devcontainer/.env
-
     ports:
      - "5432:5432"
-
-  rabbitmq:
-    env_file:
-      - .devcontainer/.env
