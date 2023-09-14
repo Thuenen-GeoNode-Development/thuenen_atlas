@@ -8,11 +8,11 @@
       "program": "./manage.py",
       "args": [
         "runserver",
-        "0.0.0.0:8000"
+        "0.0.0.0:8001"
       ],
-      "django": true,
       "justMyCode": false,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "name": "Python: Celery",
@@ -36,7 +36,8 @@
       ],
       "django": true,
       "justMyCode": false,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "name": "Django Test",
@@ -48,8 +49,8 @@
         "--keepdb",
         "geonode.storage"
       ],
-      "django": true,
-      "justMyCode": true
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
