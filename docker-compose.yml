@@ -39,11 +39,11 @@ services:
     << : *default-common-django
     container_name: django4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://django:8001/"
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8000/"
       start_period: 60s
       interval: 60s
       timeout: 10s
-      retries: 2
+      retries: 10
     environment:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
@@ -97,11 +97,11 @@ services:
         - BASE_IMAGE_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
     container_name: geoserver4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://geoserver:8080/geoserver/ows"
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8080/geoserver/ows"
       start_period: 60s
       interval: 60s
       timeout: 10s
-      retries: 2
+      retries: 10
     env_file:
       - .env
     ports:
@@ -114,6 +114,8 @@ services:
       - tmp:/tmp
     restart: unless-stopped
     depends_on:
+      db:
+        condition: service_healthy
       data-dir-conf:
         condition: service_healthy
 
