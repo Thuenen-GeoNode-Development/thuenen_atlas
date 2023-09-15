@@ -37,11 +37,9 @@ Most important repositories are
 
  Main goal of all forks is, to stay as close to the upstream as possible.
  Some repositories are maintained in a repository of the [German GeoNode user group](https://github.com/GeoNodeUserGroup-DE).
-## Development
 
 
-
-### Quick Start
+## Quick Start
 
 Clone the repository.
 
@@ -80,7 +78,7 @@ docker-compose down
 To remove all volumes you have to append the `-v` flag.
 
 
-### Configuration
+## Configuration
 
 Configuration can done in `./.env` file.
 You can make a copy from `./.env.sample`.
@@ -91,6 +89,10 @@ There is also the `./geonode/settings.py` which can be used to adjust Django set
 In the `django` container `./geonode/settings.py` is the main `DJANGO_SETTINGS_MODULE`, pre-loads the default settings and becomes available as `settings_override.py`.
 
 For more information about configuring GeoNode, consult the [Settings reference](https://docs.geonode.org/en/master/basic/docker_env_vars/index.html#dockerenvvars) of the GeoNode documentation.
+
+
+## Development
+
 
 ### DevContainers
 
@@ -168,6 +170,40 @@ npm start
 ```
 
 Make sure to use node version `12.x` (e.g. via `nvm`).
+
+
+### Working with Git Submodules
+
+We leverage [Git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to tie dependent modules laying in different repositories.
+For the Thünen Atlas project this is (for the time of writing this):
+
+* [geonode-mapstore-client](./docker/geonode/geonode-mapstore-client)
+* [externalapplications](./geonode/apps/externalapplications)
+
+You can get an overview of all submodules by running:
+
+```sh
+git submodule status
+```
+
+If you have not initiated the submodules when cloning the repository, the directories appear empty.
+You have to initiate the submodules before you can build and run Thünen Atlas.
+
+```sh
+git submodule update --remote --init --recursively
+```
+
+You would have to include the `--recursively` flas as `geonode-mapstore-client` includes `MapStore2` as submodule as well.
+
+Git keeps track of a submodule by its commit hash. 
+In case you want to develop from within the submodule directory, you have to switch to a dedicated branch before committing.
+If there are remote changes, you have to update the parent project in your local working copy:
+
+```sh
+git submodule update --remote
+```
+
+You can find a lot of good readings on Git submodules, either in the [official Git Submodule reference](https://git-scm.com/book/en/v2/Git-Tools-Submodules) or [by Atlassian](https://www.atlassian.com/git/tutorials/git-submodule).
 
 ## Docker Images
 
