@@ -186,7 +186,7 @@ You can get an overview of all submodules by running:
 git submodule status
 ```
 
-If you have not initiated the submodules when cloning the repository, the directories appear empty.
+If you have not initiated the submodules when [cloning the repository](#quick-start), the directories appear empty.
 You have to initiate the submodules before you can build and run Thünen Atlas.
 
 ```sh
