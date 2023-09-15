@@ -186,18 +186,18 @@ You can get an overview of all submodules by running:
 git submodule status
 ```
 
-If you have not initiated the submodules when [cloning the repository](#quick-start), the directories appear empty.
+If you have not initiated the submodules when [cloning the repository](#quick-start) the directories appear empty.
 You have to initiate the submodules before you can build and run Thünen Atlas.
 
 ```sh
-git submodule update --remote --init --recursively
+git submodule update --remote --init
 ```
 
-You would have to include the `--recursively` flas as `geonode-mapstore-client` includes `MapStore2` as submodule as well.
+You would have to include the `--recursively` flag as `geonode-mapstore-client` includes `MapStore2` as submodule as well.
 
 Git keeps track of a submodule by its commit hash. 
-In case you want to develop from within the submodule directory, you have to switch to a dedicated branch before committing.
-If there are remote changes, you have to update the parent project in your local working copy:
+In case you want to develop from within the submodule directory switch to a dedicated branch before committing.
+If there are remote changes update the parent project in your local working copy:
 
 ```sh
 git submodule update --remote
