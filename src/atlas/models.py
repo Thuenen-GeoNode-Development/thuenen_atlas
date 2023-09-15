@@ -31,6 +31,9 @@ class Atlas(models.Model):
         ResourceBase, related_name="resource_collections", null=True, blank=True
     )
 
+    # shall the Atlas be visible for anonymous visitors
+    public = models.BooleanField(null=True, blank=False, default=False)
+
     # customApps = models.ManyToManyField(CustomApplication, related_name='customApp_collections', null=True, blank=True,
     #                                    through='AtlasCustomAppListing')
 
