@@ -175,10 +175,10 @@ Make sure to use node version `12.x` (e.g. via `nvm`).
 ### Working with Git Submodules
 
 We leverage [Git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to tie dependent modules laying in different repositories.
-For the Thünen Atlas project this is (for the time of writing this):
+For the Thünen Atlas project these are (for the time of writing this):
 
-* [geonode-mapstore-client](./docker/geonode/geonode-mapstore-client)
-* [externalapplications](./geonode/apps/externalapplications)
+* [./docker/geonode/geonode-mapstore-client](./docker/geonode)
+* [./geonode/apps/externalapplications](./geonode/apps)
 
 You can get an overview of all submodules by running:
 
