@@ -62,6 +62,13 @@ docker-compose up -d --build
 ```
 
 You can follow the logs: `docker-compose logs -f <optional-service-name>`.
+Locate your browser to http://172.17.0.1/ to access the GeoNode UI.
+
+
+> :bulb: **Note**
+>
+> We make GeoNode available under IP `172.17.0.1` so that no components try to communicate via `localhost` (each container has their own loopback interface).
+
 
 
 To shutdown GeoNode, run:
@@ -72,6 +79,18 @@ docker-compose down
 
 To remove all volumes you have to append the `-v` flag.
 
+
+### Configuration
+
+Configuration can done in `./.env` file.
+You can make a copy from `./.env.sample`.
+We keep the contents to a bare minimum needed to run the whole setup.
+This configuration is used during `docker-compose` runs, and also when running the devcontainer.
+
+There is also the `./geonode/settings.py` which can be used to adjust Django settings, like logging, context processors, installed apps and more.
+In the `django` container `./geonode/settings.py` is the main `DJANGO_SETTINGS_MODULE`, pre-loads the default settings and becomes available as `settings_override.py`.
+
+For more information about configuring GeoNode, consult the [Settings reference](https://docs.geonode.org/en/master/basic/docker_env_vars/index.html#dockerenvvars) of the GeoNode documentation.
 
 ### DevContainers
 
@@ -104,16 +123,17 @@ After downloading and building the images, the terminal prints when containers a
  ✔ Container celery4geonode         Created                                0.0s
 ```
 
-When seeing the about output, you can watch logging via `docker-compose logs -f`.
+When seeing the above output, you can watch logging via `docker-compose logs -f`.
 
 The devcontainer setup does not start GeoNode automatically.
 Once the container is ready, you can press `F5` to start debugging GeoNode.
-
+Locate your browser to `http://172.17.0.1:8001`.
 
 > :bulb: **Note**
 >
-> In the devcontainer setup, routing is not done through nginx!
+> In the devcontainer setup, GeoNode is not available via nginx!
 > Starting GeoNode in devcontainer actually runs `python manage.py runserver` which starts a lightweight development web server based on WSGI.
+> However, GeoServer is routed via nginx and available from http://172.17.0.1/geoserver.
 
 
 
