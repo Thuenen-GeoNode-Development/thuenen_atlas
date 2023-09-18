@@ -10,8 +10,8 @@ echo "PLUGINS: $PLUGINS"
 # clean plugins folder
 echo "clean up old plugins in ./plugins/"
 mkdir -p ./plugins
-rm ./plugins/* -Rf
-sleep 2s
+find ./plugins ! -name '.keep' -type f -exec rm -f {} +
+
 for plugin in $PLUGINS; do \
   echo "fetching data for $plugin"
   wget https://downloads.sourceforge.net/project/geoserver/GeoServer/$GEOSERVER_VERSION/extensions/geoserver-$GEOSERVER_VERSION-$plugin-plugin.zip && \
