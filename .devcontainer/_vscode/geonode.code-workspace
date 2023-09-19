@@ -4,7 +4,7 @@
 			"path": "/usr/src/geonode"
 		},
 		{
-			"path": "/usr/local/lib/python3.10/dist-packages/importer"
+			"path": "/usr/src/geonode-importer/importer"
 		},
 		{
 			"path": "/usr/src/geonode-mapstore-client/geonode_mapstore_client"
