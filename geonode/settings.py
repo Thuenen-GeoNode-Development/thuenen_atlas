@@ -2,6 +2,7 @@
 import os
 # load the defaults settings
 from geonode.settings import *
+from geonode.settings import TEMPLATES, INSTALLED_APPS
 
 
 SITENAME = os.getenv("SITENAME", 'thuenen_atlas')
@@ -14,7 +15,7 @@ LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
 # Additional directories which hold static files
 # - Give priority to local ones
 TEMPLATES[0]['DIRS'].insert(0, "/usr/src/geonode/templates")
-loaders = ['django.template.loaders.filesystem.Loader','django.template.loaders.app_directories.Loader']
+loaders = ['django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader']
 TEMPLATES[0]['OPTIONS']['loaders'] = loaders
 TEMPLATES[0].pop('APP_DIRS', None)
 
