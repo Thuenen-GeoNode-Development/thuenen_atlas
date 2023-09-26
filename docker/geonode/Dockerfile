@@ -7,4 +7,4 @@ RUN yes w | pip install -e /usr/src/geonode-mapstore-client
 COPY ./requirements.txt more_requirements.txt
 RUN yes w | pip install --src /usr/src -r more_requirements.txt
 
-
+RUN rm .env*

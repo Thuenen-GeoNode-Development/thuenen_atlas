@@ -12,7 +12,6 @@
       ],
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env"
     },
     {
       "name": "Python: Celery",
@@ -37,7 +36,6 @@
       "django": true,
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env"
     },
     {
       "name": "Django Test",
