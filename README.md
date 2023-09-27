@@ -68,6 +68,20 @@ Locate your browser to http://172.17.0.1/ to access the GeoNode UI.
 > We make GeoNode available under IP `172.17.0.1` so that no components try to communicate via `localhost` (each container has their own loopback interface).
 
 
+### TLS Config
+
+If you want to configure a TLS certificate, you can mount key and cert as `pem`s in the `geonode` service within the `docker-compose.yml` file.
+Uncomment the corresponding lines:
+
+ ```sh
+ volumes:
+    - nginx-confd:/etc/nginx
+    - statics:/mnt/volumes/statics
+    # Link to a custom certificate here
+    #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
+    #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
+ ```
+
 
 To shutdown GeoNode, run:
 
