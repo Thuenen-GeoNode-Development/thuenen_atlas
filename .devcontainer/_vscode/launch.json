@@ -45,10 +45,14 @@
       "args": [
         "test",
         "--keepdb",
-        "geonode.storage"
+        "settings=geonode.settings_override",
+        "importer.handlers.shapefile"
       ],
       "justMyCode": false,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "DJANGO_SETTINGS_MODULE": "geonode.settings_override"
+      }
     }
   ]
 }
