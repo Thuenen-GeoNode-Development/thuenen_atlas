@@ -2,7 +2,7 @@
 import os
 # load the defaults settings
 from geonode.settings import *
-from geonode.settings import TEMPLATES, INSTALLED_APPS
+from geonode.settings import TEMPLATES, INSTALLED_APPS, IMPORTER_HANDLERS
 
 
 SITENAME = os.getenv("SITENAME", 'thuenen_atlas')
@@ -50,11 +50,11 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["console"], "level": "ERROR", },
+            "handlers": ["console"], "level": "DEBUG", },
         "geonode": {
-            "handlers": ["console"], "level": "INFO", },
+            "handlers": ["console"], "level": "DEBUG", },
         "geoserver-restconfig.catalog": {
-            "handlers": ["console"], "level": "ERROR", },
+            "handlers": ["console"], "level": "DEBUG", },
         "owslib": {
             "handlers": ["console"], "level": "ERROR", },
         "pycsw": {
@@ -67,6 +67,11 @@ LOGGING = {
             "handlers": ["console"], "level": "DEBUG", },
     },
 }
+
+IMPORTER_HANDLERS = (
+    'importer_datapackage.handlers.datapackage.handler.DataPackageFileHandler',
+    *IMPORTER_HANDLERS,
+)
 
 INSTALLED_APPS += ("atlas",
                    "externalapplications",
