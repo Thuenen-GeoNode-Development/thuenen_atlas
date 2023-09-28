@@ -29,7 +29,7 @@ x-common-django:
   depends_on:
     db:
       condition: service_healthy
-    geoserver:
+    data-dir-conf:
       condition: service_healthy
 
 services:
@@ -50,15 +50,13 @@ services:
       - IS_CELERY=False
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
-    #command: sleep infinity
 
   # Celery worker that executes celery tasks created by Django.
   celery:
     << : *default-common-django
     container_name: celery4${COMPOSE_PROJECT_NAME}
     depends_on:
-      django:
-        condition: service_healthy
+      - django
     environment:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
