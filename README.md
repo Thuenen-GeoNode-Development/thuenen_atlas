@@ -172,6 +172,16 @@ npm start
 Make sure to use node version `12.x` (e.g. via `nvm`).
 
 
+> :bulb: **Note**
+>
+> Do not commit compiled JavaScript!
+>
+> To make code review easier and support branch maintenance, we let GitHub build the client and create a PR dedicated to the compiled JavaScript.
+> After merging the PR you can pull the latest changes again to sync with the remote repo.
+> This is necessary to not clutter any merge with thousands of changes in the `static/mapstore/dist` folder.
+
+
+
 ### Working with Git Submodules
 
 We leverage [Git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to tie dependent modules laying in different repositories.
