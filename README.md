@@ -238,3 +238,22 @@ docker
 └── postgresql                      # Extension point for Postgres
     └── Dockerfile                  # Uses geonode/postgis (may change when tagging becomes unstable as well)
 ```
+
+## Testing
+
+To run the tests a running GeoNode instance is needed.
+All test data is stored in separate databases which are prefixed by `TEST_`. 
+
+In your devcontainer setup the test databases should have been prepared already.
+Verify if `test_geonode` and `test_geonode_data` is available.
+
+```sh
+docker-compose exec -e PGPASSWORD=postgres db psql -U postgres -c \\l
+```
+
+Afterwards the necessary test databases and users have been created.
+Now, you can start the tests by running:
+
+```sh
+python manage.py test -v 3 --keepdb <[optional] the module to test>
+```

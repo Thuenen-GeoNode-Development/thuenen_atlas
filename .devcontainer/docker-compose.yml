@@ -29,5 +29,8 @@ services:
       - "8080:8080"
 
   db:
+    build:
+      context: ./.devcontainer/docker/postgresql
+      dockerfile: Dockerfile
     ports:
      - "5432:5432"
