@@ -108,6 +108,5 @@ thuenen_app/
 # Mounted config
 fixtures/
 geonode/settings_override.py
-mode_requirements.txt
-
+more_requirements.txt
 

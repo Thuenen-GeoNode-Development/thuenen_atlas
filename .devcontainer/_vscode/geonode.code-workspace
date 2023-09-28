@@ -6,9 +6,6 @@
 		{
 			"path": "/usr/src/geonode-importer/importer"
 		},
-		{
-			"path": "../../django_geonode_mapstore_client/geonode_mapstore_client"
-		}
 	],
 	"settings": {}
 }
