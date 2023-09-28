@@ -19,6 +19,12 @@ services:
     #   - './src:/usr/src/geonode'
 
   geoserver:
+    build:
+      context: ./.devcontainer/docker/geoserver
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
+    env_file: ./.devcontainer/.env.local
     ports:
       - "8080:8080"
 
