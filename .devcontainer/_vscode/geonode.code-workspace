@@ -7,7 +7,7 @@
 			"path": "/usr/src/geonode-importer/importer"
 		},
 		{
-			"path": "/usr/src/geonode-mapstore-client/geonode_mapstore_client"
+			"path": "../../django_geonode_mapstore_client/geonode_mapstore_client"
 		}
 	],
 	"settings": {}
