@@ -254,7 +254,13 @@ docker
 To run the tests a running GeoNode instance is needed.
 All test data is stored in separate databases which are prefixed by `TEST_`. 
 
-In your devcontainer setup the test databases should have been prepared already.
+Before starting tests you have to prepare test databases.
+Once devcontainer setup is started, just run the command:
+
+```sh
+docker-compose exec db sh /docker-entrypoint-initdb.d/prepare-testdb.sh
+```
+
 Verify if `test_geonode` and `test_geonode_data` is available.
 
 ```sh
