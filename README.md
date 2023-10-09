@@ -215,6 +215,23 @@ git submodule update --remote
 
 You can find a lot of good readings on Git submodules, either in the [official Git Submodule reference](https://git-scm.com/book/en/v2/Git-Tools-Submodules) or [by Atlassian](https://www.atlassian.com/git/tutorials/git-submodule).
 
+
+### Working with Feature Branches
+
+During development we follow the goal to contribute features to the upstream projects.
+This means, we have to keep feature relevant commits in a dedicated branch which later can be used to create pull requests.
+Those feature branches get a `thuenen_<feature name>` suffix, whereas `<feature name>` should be a good name describing or referencing the feature.
+
+The following workflow proposes how to develop feature branches based on a dedicated commit/tag and how to merge them onto the thuenen development branch.
+
+1. Create a feature branch from dedicated commit: `git checkout -b thuenen_<feature name> <commit-id>`.
+   Do not use a commit-id from a thuenen branch as it already contains other commits.
+   For GeoNode for example, you can use the tag `4.1.3` or its commit hash.
+1. Make your commits on that feature branch.
+1. To merge the feature, `git switch` to main development branch and do a `git merge --no-ff thuenen_<feature name>`.
+   Do not rebase the feature branch onto the main development branch!
+   This would smudge the dedicated commit you created the feature branch from.
+
 ## Docker Images
 
 All images are based on pre-built base images.
