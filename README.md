@@ -180,6 +180,19 @@ Make sure to use node version `12.x` (e.g. via `nvm`).
 > After merging the PR you can pull the latest changes again to sync with the remote repo.
 > This is necessary to not clutter any merge with thousands of changes in the `static/mapstore/dist` folder.
 
+Once an automated build PR has been merged, the geonode-mapstore-client submodule should be updated to point to a the new version.
+To do this run the command
+
+```sh
+git submodule udpate --remote
+```
+
+Alternatively, you may want to point to a specific submodule version:
+
+```sh
+cd docker/geonode/geonode-mapstore-client
+git checkout <commit-id>
+```
 
 
 ### Working with Git Submodules
