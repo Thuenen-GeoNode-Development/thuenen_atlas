@@ -48,7 +48,6 @@ services:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=False
-      - DJANGO_SETTINGS_MODULE=geonode.istg_settings
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
 
@@ -62,7 +61,6 @@ services:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=True
-      - DJANGO_SETTINGS_MODULE=geonode.istg_settings
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "celery-cmd"
 
