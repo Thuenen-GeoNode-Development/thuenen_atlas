@@ -44,8 +44,8 @@ Most important repositories are
 Clone the repository.
 
 ```sh
-git clone --recurse-submodules https://github.com/Thuenen-GeoNode-Development/thuenen_atlas -b thuenen_4.x thuenen_4.x
-cd thuenen_4.x
+git clone --recurse-submodules https://github.com/Thuenen-GeoNode-Development/thuenen_atlas -b thuenen_4.x
+cd thuenen_atlas
 ```
 
 > :bulb: **Note**
