@@ -89,7 +89,6 @@ services:
       #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
       #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
     restart: on-failure
-    restart: unless-stopped
 
   # Geoserver backend
   geoserver:
