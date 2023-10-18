@@ -44,14 +44,14 @@ Most important repositories are
 Clone the repository.
 
 ```sh
-git clone https://github.com/Thuenen-GeoNode-Development/thuenen_atlas -b thuenen_4.x
+git clone --recurse-submodules https://github.com/Thuenen-GeoNode-Development/thuenen_atlas -b thuenen_4.x thuenen_4.x
 cd thuenen_4.x
 ```
 
 > :bulb: **Note**
 >
 > `geonode-mapstore-client` is a huge repository.
-> If you want to keep a small footprint, add `--shallow-submodules --recurse-submodules` when cloning the repository.
+> If you want to keep a small footprint, add `--shallow-submodules` when cloning the repository.
 
 To build and start GeoNode, run:
 
