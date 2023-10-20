@@ -77,3 +77,68 @@ INSTALLED_APPS += ("atlas",
                    "externalapplications",
                    "importer_datapackage",
                    "thuenen_app")
+
+# LDAP
+# WE DO NOT USE CONTRIB APP BUT
+# django-auth-ldap
+# Add your specific LDAP configuration after this comment:
+# https://pypi.org/project/django-auth-ldap/
+# --------------------------------------------------
+# LDAP conf:
+
+from django_auth_ldap import config as ldap_config
+# from geonode_ldap.config import GeonodeNestedGroupOfNamesType
+import ldap
+
+LDAP_ENABLED = ast.literal_eval(os.getenv('LDAP_ENABLED', 'False'))
+
+# enable logging
+import logging
+logger = logging.getLogger('django_auth_ldap')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
+
+# add both standard ModelBackend auth and django_auth_ldap.backend.LDAPBackend auth
+AUTHENTICATION_BACKENDS += (
+    'django_auth_ldap.backend.LDAPBackend',
+)
+
+# django_auth_ldap configuration
+AUTH_LDAP_SERVER_URI = os.getenv("LDAP_SERVER_URL")
+AUTH_LDAP_BIND_DN = os.getenv("LDAP_BIND_DN")
+AUTH_LDAP_BIND_PASSWORD = os.getenv("LDAP_BIND_PASSWORD")
+
+# USER
+AUTH_LDAP_USER_SEARCH = ldap_config.LDAPSearch(
+    os.getenv("LDAP_USER_SEARCH_DN"),
+    ldap.SCOPE_SUBTREE,
+    os.getenv("LDAP_USER_SEARCH_FILTERSTR")
+)
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail"
+}
+
+# GROUPS
+# Group mirroring is not working since GeoNode does not
+# use the standard Django group models. Since geonode-ldap contrib
+# app is very old and badly maintained we will use django-auth-ldap
+# instead. For this we need to disable groups:
+AUTH_LDAP_MIRROR_GROUPS = False
+AUTH_LDAP_FIND_GROUP_PERMS = False
+AUTH_LDAP_MIRROR_GROUPS_EXCEPT = False
+# AUTH_LDAP_GROUP_SEARCH = ldap_config.LDAPSearch(
+#     os.getenv("LDAP_GROUP_SEARCH_DN"),
+#     ldap.SCOPE_SUBTREE,
+#     os.getenv("LDAP_GROUP_SEARCH_FILTERSTR")
+# )
+# # see comment above
+# # AUTH_LDAP_GROUP_TYPE = GeonodeNestedGroupOfNamesType()
+
+# # these are not needed by django_auth_ldap - we use them to find and match
+# # GroupProfiles and GroupCategories
+# GEONODE_LDAP_GROUP_NAME_ATTRIBUTE = os.getenv("LDAP_GROUP_NAME_ATTRIBUTE", default="cn")
+# GEONODE_LDAP_GROUP_PROFILE_FILTERSTR = os.getenv("LDAP_GROUP_SEARCH_FILTERSTR", default='(ou=research group)')
+# GEONODE_LDAP_GROUP_PROFILE_MEMBER_ATTR = os.getenv("LDAP_GROUP_PROFILE_MEMBER_ATTR", default='member')
+# --------------------------------------------------
