@@ -74,8 +74,10 @@ services:
     container_name: nginx4${COMPOSE_PROJECT_NAME}
     env_file: ./.env
     environment:
-      - HTTPS_HOST=
+      - HTTPS_HOST=${GEONODE_LB_HOST_IP}
+      # emtpy HTTP_x to only allow HTTPS connections
       - HTTP_HOST=${GEONODE_LB_HOST_IP}
+      - HTTP_PORT=${GEONODE_LB_PORT}
       - LETSENCRYPT_MODE=disabled
       - RESOLVER=127.0.0.11
     ports:
