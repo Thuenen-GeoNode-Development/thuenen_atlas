@@ -8,7 +8,7 @@
         // is not possible from the outside.
         // Some cfg of the ResourcesGrid component is set as default JS parameters, so we 
         // have to set that config here to make it overridable via override_local_config.
-
+        
         const resourceGridPluginMenuItems = [
             {
                 labelId: 'gnhome.addResource',
@@ -67,7 +67,7 @@
             }
         ]
 
-        const resourcesGridPluginCustomFilters = [
+        const resourcesGridPluginFiltersFormItems = [
             {
                 type: 'group',
                 labelId: 'gnhome.customFiltersTitle',
@@ -180,22 +180,12 @@
             }
         ];
 
-        const addFilterTo = (filters=[], filterToAdd, groupId="") => {
-            if (groupId) {
-                filterGroup = filters.filter(item => item.id == groupId)
-                if (filterGroup) {
-                    filterGroup[0].items.push(filterToAdd);
-                }
-                return filters;
-            } else {
-                filters.push(filterToAdd);
-                return filters;
-            }
-        }
-
         const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
         window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
-            
+            if (overrideLocalConfig) {
+                overrideLocalConfig(localConfig, _)
+            }
+
             var pluginPageName = "catalogue";
             var selectedPluginName = "ResourcesGrid";
 
@@ -204,31 +194,41 @@
                 var isSelectedPlugin = currentPlugin.name === selectedPluginName;
                 if (isSelectedPlugin) {
                     // apply configuration to the plugin
-                    const plugin = localConfig.plugins[pluginPageName][i];
-                    const filterItems = addFilterTo(resourcesGridPluginCustomFilters[0].items, {
-                        "id": "tabular",
-                        "labelId": "gnhome.tabular",
-                        "type": "filter",
-                        
-                    }, 'dataset');
+                    const plugin = localConfig.plugins[pluginPageName][i]
 
-                    // override filterItems
-                    resourcesGridPluginCustomFilters[0].items = filterItems;
+                    const filtersFormItems = resourcesGridPluginFiltersFormItems
+                    filtersFormItems[0].items.push({
+                        id: "externalapplication",
+                        labelId: "externalapplications.filter",
+                        type: "filter"
+                    });
                     localConfig.geoNodeCustomFilters = Object.assign(localConfig.geoNodeCustomFilters, {
-                        "tabular": {
-                            "filter{subtype.in}": "tabular"
+                        "externalapplication": {
+                            "filter{resource_type.in}": "externalapplication"
                         }
                     });
+                    plugin.cfg.filtersFormItems = filtersFormItems
 
-                    plugin.cfg.filtersFormItems = resourcesGridPluginCustomFilters;
-                    plugin.cfg.menuItems = resourceGridPluginMenuItems;
 
+                    const menuItems = resourceGridPluginMenuItems
+                    menuItems[0].items.push({
+                        labelId: "externalapplications.register",
+                        value: "externalapplication",
+                        type: "link",
+                        href: "/externalapplications/create",
+                        authenticated: true,
+                        perms: [
+                            {
+                                "type": "user",
+                                "value": "add_resource"
+                            }
+                        ]
+                    });
+                    plugin.cfg.menuItems = menuItems;
                 }
             }
 
-            return overrideLocalConfig 
-                ? overrideLocalConfig(localConfig, _)
-                : localConfig;
+            return localConfig;
         };
     })();
 </script>
