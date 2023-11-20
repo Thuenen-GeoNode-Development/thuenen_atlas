@@ -8,6 +8,8 @@ COPY ./ldap /usr/src/ldap
 RUN yes w | pip install -e /usr/src/ldap
 
 COPY ./requirements.txt more_requirements.txt
+COPY ./views.py /usr/src/geonode/geonode/layers/views.py
+COPY ./LayerInfo.js /usr/src/geonode/geonode/static/geonode/js/upload/LayerInfo.js
 RUN yes w | pip install --src /usr/src -r more_requirements.txt
 
 RUN rm .env*
