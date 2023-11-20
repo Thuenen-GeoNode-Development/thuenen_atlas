@@ -1,1 +1,2 @@
 -e git+https://github.com/GeoNodeUserGroup-DE/importer-datapackage.git@main#egg=importer_datapackage
+-e git+https://github.com/geopython/pycsw.git#egg=pycsw

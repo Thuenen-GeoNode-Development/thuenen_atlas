@@ -8,6 +8,7 @@ COPY ./ldap /usr/src/ldap
 RUN yes w | pip install -e /usr/src/ldap
 
 COPY ./requirements.txt more_requirements.txt
+COPY ./pycsw_local_mappings.py /usr/src/geonode/geonode/catalogue/backends/pycsw_local_mappings.py
 RUN yes w | pip install --src /usr/src -r more_requirements.txt
 
 RUN rm .env*
