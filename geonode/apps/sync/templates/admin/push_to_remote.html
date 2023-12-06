@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<h1>Push to remote GeoNode instance</h1>
+
+<h2>The following entities will be pushed:</h2>
+
+<table class="grp-table" style="margin: 20px">
+  <thead>
+    <tr> 
+      <th>ID</th>
+      <th>Title</th>
+      <th>UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for resource in resources %}
+    <tr class="grp-row-{% cycle "odd" "even" %}">
+      <td>{{resource.pk}}</td>
+      <td>{{resource.title}}</td>
+      <td>{{resource.uuid}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Please select the target GeoNode instance</h2>
+
+<form action="" method="post" style="margin: 20px">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% for resource in resources %}
+  <input type="hidden" name="_selected_action" value="{{ resource.pk }}"/>
+  {% endfor %}
+  <input type="hidden" name="action" value="push_to_remote"/>
+  <br/>
+  <input type="submit" name="apply" value="Push to remote"/>
+  <input type="submit" name="cancel" value="Cancel" formnovalidate/>
+</form>
+{% endblock %}

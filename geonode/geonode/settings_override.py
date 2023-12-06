@@ -92,6 +92,7 @@ IMPORTER_HANDLERS = (
 
 INSTALLED_APPS += (
     "atlas",
+    "sync",
     "externalapplications",
     "importer_datapackage",
     "thuenen_app",

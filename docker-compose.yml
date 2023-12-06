@@ -21,6 +21,7 @@ x-common-django:
     - ./geonode/apps/atlas:/usr/src/geonode/atlas
     - ./geonode/apps/thuenen_app:/usr/src/geonode/thuenen_app
     - ./geonode/apps/externalapplications/externalapplications:/usr/src/geonode/externalapplications
+    - ./geonode/apps/sync:/usr/src/geonode/sync
     # volumes
     - statics:/mnt/volumes/statics
     - geoserver-data-dir:/geoserver_data/data
