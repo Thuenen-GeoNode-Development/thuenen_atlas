@@ -6,6 +6,7 @@ from geonode.settings import TEMPLATES, INSTALLED_APPS, IMPORTER_HANDLERS
 
 
 SITENAME = os.getenv("SITENAME", 'thuenen_atlas')
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
