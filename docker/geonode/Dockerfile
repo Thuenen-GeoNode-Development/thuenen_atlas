@@ -13,7 +13,6 @@ COPY ./geonode-mapstore-client /usr/src/django_geonode_mapstore_client
 RUN yes w | pip install -e /usr/src/django_geonode_mapstore_client
 
 COPY ./requirements.txt more_requirements.txt
-COPY ./full_metadata.xml /usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
 RUN yes w | pip install --src /usr/src -r more_requirements.txt
 
 RUN rm .env*
