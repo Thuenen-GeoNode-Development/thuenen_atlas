@@ -1,6 +1,7 @@
 import logging
 from geonode.base.models import ResourceBase
 from .models import RemoteGeoNodeInstance
+
 logger = logging.getLogger("geonode.push_to_remote")
 
 

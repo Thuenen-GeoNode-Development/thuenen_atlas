@@ -1,8 +1,17 @@
 from django.apps import AppConfig
 from django.conf import settings
 from django.conf.urls import include, url
+
+
 import logging
+
 logger = logging.getLogger(__name__)
+
+
+BASE_FILE = "resource"
+THUMBNAIL_FILE = "thumbnail"
+STYLE_FILE = "style"
+DATA_FILE = "data"
 
 
 def run_setup_hooks(*args, **kwargs):
@@ -18,8 +27,8 @@ def run_setup_hooks(*args, **kwargs):
 
 
 class SyncConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'sync'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "sync"
     type = "GEONODE_APP"
 
     def ready(self):

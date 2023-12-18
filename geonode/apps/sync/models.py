@@ -41,23 +41,16 @@ class RemotePushSession(models.Model):
     ended = models.DateTimeField(null=True, blank=True)
     details = models.TextField(blank=True)
     force = models.BooleanField(default=False)
-    initiator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        on_delete=models.SET_NULL)
+    initiator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     status = models.CharField(
         max_length=50,
         choices=Status.choices,
         default=Status.PENDING,
     )
     total_resources_to_process = models.IntegerField(
-        default=0,
-        help_text=_("Number of resources being processed in this session")
+        default=0, help_text=_("Number of resources being processed in this session")
     )
-    resources_done = models.IntegerField(
-        default=0,
-        help_text=_("Number of resources that have already been processed")
-    )
+    resources_done = models.IntegerField(default=0, help_text=_("Number of resources that have already been processed"))
 
     def abort(self) -> None:
         if self.status == self.Status.PENDING:
@@ -93,15 +86,10 @@ class RemotePushSession(models.Model):
         RemotePushSession.objects.filter(pk=self.pk).update(resources_done=F("resources_done") + amount)
 
     @classmethod
-    def create(cls,
-               remote: RemoteGeoNodeInstance,
-               force: bool,
-               initiator,
-               queryset):
-        session = cls.objects.create(remote=remote,
-                                     force=force,
-                                     initiator=initiator,
-                                     total_resources_to_process=queryset.count())
+    def create(cls, remote: RemoteGeoNodeInstance, force: bool, initiator, queryset):
+        session = cls.objects.create(
+            remote=remote, force=force, initiator=initiator, total_resources_to_process=queryset.count()
+        )
         for resource in queryset:
             session.create_job(resource)
         return session
@@ -147,7 +135,7 @@ class RemotePushJob(models.Model):
             self.status = self.Status.ABORTING
         else:
             logger.debug(f"Job {self} is not currently in an state that can be aborted, skipping...")
-        
+
         self.save()
 
     def set_running(self):

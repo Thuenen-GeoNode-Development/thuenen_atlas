@@ -22,11 +22,13 @@ def reverse_model_list_link(model, *args, **kwargs) -> str:
 def reverse_model_link(model, *args, **kwargs) -> str:
     return reverse(f"admin:{model._meta.app_label}_{model._meta.model_name}_change", *args, **kwargs)
 
+
 def reverse_model_link_html(model, label=None):
     if not label:
         label = model
     url = reverse_model_link(model, args=(model.pk,))
     return mark_safe(format_html(f'<a href="{url}">{label}</a>'))
+
 
 class RemoteGeoNodeInstanceForm(forms.ModelForm):
     class Meta:
@@ -44,19 +46,41 @@ class RemoteGeoNodeInstanceAdmin(admin.ModelAdmin):
 
 
 class PushForm(forms.Form):
-    target_instance = forms.ModelChoiceField(RemoteGeoNodeInstance.objects.all(),
-                                             required=True,
-                                             label="Target GeoNode Instance")
+    target_instance = forms.ModelChoiceField(
+        RemoteGeoNodeInstance.objects.all(), required=True, label="Target GeoNode Instance"
+    )
     force_push = forms.BooleanField(label="Force Push", initial=False, required=False)
 
 
 @admin.register(RemotePushSession)
 class RemotePushSessionAdmin(admin.ModelAdmin):
     model = RemotePushSession
-    list_display = ("pk", "remote_link", "started", "updated", "ended", "force", "initiator_link", "status", "progress", "jobs_link")
-    #list_display_links = ("pk",)
+    list_display = (
+        "pk",
+        "remote_link",
+        "started",
+        "updated",
+        "ended",
+        "force",
+        "initiator_link",
+        "status",
+        "progress",
+        "jobs_link",
+    )
+    # list_display_links = ("pk",)
     list_filter = ("remote", "force", "status")
-    readonly_fields = ("remote", "started", "updated", "ended", "details", "force", "initiator", "status", "total_resources_to_process", "resources_done")
+    readonly_fields = (
+        "remote",
+        "started",
+        "updated",
+        "ended",
+        "details",
+        "force",
+        "initiator",
+        "status",
+        "total_resources_to_process",
+        "resources_done",
+    )
     actions = ["abort"]
 
     @admin.display(description="Progress")
@@ -97,11 +121,22 @@ class RemotePushSessionAdmin(admin.ModelAdmin):
 @admin.register(RemotePushJob)
 class RemotePushJobAdmin(admin.ModelAdmin):
     model = RemotePushJob
-    list_display = ("pk", "session_link", "resource_link", "remote_link", "initiator_link", "status", "started", "updated", "ended", "remote_url")
+    list_display = (
+        "pk",
+        "session_link",
+        "resource_link",
+        "remote_link",
+        "initiator_link",
+        "status",
+        "started",
+        "updated",
+        "ended",
+        "remote_url",
+    )
     list_filter = ("session", "resource", "status")
     readonly_fields = ("resource", "status", "session", "started", "updated", "ended", "details")
     actions = ["abort"]
-    
+
     @admin.display(description="Resource", ordering="resource")
     def resource_link(self, job: RemotePushJob):
         resource = ResourceBase.objects.polymorphic_queryset().get(pk=job.resource.pk)
@@ -131,7 +166,7 @@ class RemotePushJobAdmin(admin.ModelAdmin):
         for job in queryset:
             job.abort()
         self.message_user(request, "Push jobs have been aborted")
-    
+
     def delete_queryset(self, request, queryset):
         for job in queryset:
             job.delete()
@@ -143,10 +178,12 @@ def push_to_remote(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset:
     if "apply" in request.POST:
         form = PushForm(request.POST)
         if form.is_valid():
-            session = RemotePushSession.create(remote=form.cleaned_data["target_instance"],
-                                               force=form.cleaned_data["force_push"],
-                                               initiator=request.user,
-                                               queryset=queryset)
+            session = RemotePushSession.create(
+                remote=form.cleaned_data["target_instance"],
+                force=form.cleaned_data["force_push"],
+                initiator=request.user,
+                queryset=queryset,
+            )
             remote_push_session_task.delay(session.pk)
             uri = reverse_model_list_link(RemotePushJob)
         return HttpResponseRedirect(f"{uri}?session__id__exact={session.pk}")
@@ -154,18 +191,19 @@ def push_to_remote(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset:
         return HttpResponseRedirect(request.get_full_path())
     else:
         form = PushForm()
-        return render(request, "admin/push_to_remote.html",
-                      context={"resources": queryset, "form": form})
+        return render(request, "admin/push_to_remote.html", context={"resources": queryset, "form": form})
 
 
 try:
     from geonode.layers.admin import DatasetAdmin
+
     DatasetAdmin.actions += [push_to_remote]
 except:
     pass
 
 try:
     from geonode.documents.admin import DocumentAdmin
+
     DocumentAdmin.actions += [push_to_remote]
 except:
     pass
