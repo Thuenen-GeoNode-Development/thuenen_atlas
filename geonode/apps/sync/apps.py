@@ -16,14 +16,15 @@ DATA_FILE = "data"
 
 def run_setup_hooks(*args, **kwargs):
     from geonode.urls import urlpatterns
-    urlpatterns += [
-        url(r'^sync/', include('sync.urls')),
-        url(r'^api/v2/', include('sync.api.urls')),
-    ]
-    settings.CELERY_BEAT_SCHEDULE['push-to-remote'] = {
+    from geonode.api.urls import router
+    from .api import views
+
+    settings.CELERY_BEAT_SCHEDULE["push-to-remote"] = {
         "task": "sync.tasks.scheduler",
         "schedule": getattr(settings, "PUSH_TO_REMOTE_SCHEDULER_FREQUENCY_MINUTES", 0.5) * 60,
     }
+
+    urlpatterns += [url(r"^sync/receive", views.ReceivePushedDataViewSet.as_view())]
 
 
 class SyncConfig(AppConfig):

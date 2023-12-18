@@ -1,21 +1,23 @@
-
-
-from .models import RemotePushJob, RemotePushSession
-from .serializers import create_serializer
-from celery import group
-from django.core.serializers.json import DjangoJSONEncoder
-from django.core.serializers.json import DjangoJSONEncoder
-from geonode.celery_app import app
-from geonode.storage.manager import StorageManager
-from sync.models import RemotePushJob
-from sync.serializers import create_serializer
+import os
 import io
 import json
 import logging
 import requests
 import typing
+from zipfile import ZipFile, ZipInfo
+from celery import group
+
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
+
+from geonode.celery_app import app
+from geonode.storage.manager import StorageManager
+
+from .apps import BASE_FILE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
+from .models import RemotePushJob, RemotePushSession
+from .serializers import create_serializer
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +103,50 @@ def resource_to_json(resource):
     representation = serializer.to_representation(resource)
     return json.dumps(representation, cls=DjangoJSONEncoder)
 
+
+def upload_resource(session: RemotePushSession, job: RemotePushJob):
+    logger.info(f"uploading resource {job.resource}")
+    # get the actual resource
+    resource = job.resource.polymorphic_ctype.get_object_for_this_type(pk=job.resource.pk)
+    storageManager = StorageManager()
+
+    zipped_bytes = io.BytesIO()
+    with ZipFile(zipped_bytes, "w") as zip_file:
+        if resource.files:
+            for idx, path in enumerate(resource.files):
+                basename = os.path.basename(path)
+                zip_file.write(path, basename)
+    zipped_bytes.seek(0)
+
+    files = {
+        "base_file": ("file.zip", zipped_bytes, "application/zip"),
+        "zip_file": ("file.zip", zipped_bytes, "application/zip"),
+        "sld_file": ("style.xml", resource.default_style.sld_body, "text/xml"),
+        "xml_file": ("metadata.xml", io.StringIO(resource.metadata_xml), "text/xml"),
+        "resource_file": (BASE_FILE, io.StringIO(resource_to_json(resource)), "application/json"),
+        "thumbnail": (resource.thumbnail_path, storageManager.open(resource.thumbnail_path)),
+    }
+
+    data = {
+        "force": session.force,
+        "uuid": resource.uuid,
+        "overwrite_existing_layer": session.force,
+    }
+
+    # if resource.files:
+    #     for idx, path in enumerate(resource.files):
+    #         ext = path.split(".")[-1]
+    #         files[f"{ext}_file"] = (path, storageManager.open(path))
+
+    auth = (session.remote.username, session.remote.password)
+    url = f"{session.remote.url}/api/v2/uploads/upload"
+    # TODO remove webhook.site
+    # url = "https://webhook.site/20feca89-00f7-4d8b-943f-df7f20a6c901"
+    verify_tls = getattr(settings, "PUSH_TO_REMOTE_VERIFY_REMOTE_TLS", True)
+    response = requests.post(url, files=files, auth=auth, data=data, verify=verify_tls, stream=False)
+    response.raise_for_status()
+
+
 def push_resource(session: RemotePushSession, job: RemotePushJob):
     logger.info(f"pushing resource {job.resource}")
     # get the actual resource
@@ -126,23 +172,28 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
             storageManager.open(resource.thumbnail_path),
         )
 
+    verify_tls = getattr(settings, "PUSH_TO_REMOTE_VERIFY_LOCAL_TLS", False)
     datasetContentType = ContentType.objects.get(app_label="layers", model="dataset")
     # add the actual dataset to the request
     if resource.polymorphic_ctype == datasetContentType:
-        # either as GeoJSON
-        if resource.subtype == "vector":
-            url = resource.link_set.get(link_type="data", mime="json").url
-            url = fix_geoserver_url(url)
-            response = requests.get(url)
-            response.raise_for_status()
-            files["data"] = ("data.json",response.content)
-        # or as GeoTIFF
-        elif resource.subtype == "raster":
-            url = resource.link_set.get(link_type="data", mime="image/tiff").url
-            url = fix_geoserver_url(url)
-            response = requests.get(url)
-            response.raise_for_status()
-            files["data"] = ("data.tiff", response.content)
+        try:
+            # either as GeoJSON
+            if resource.subtype == "vector":
+                url = resource.link_set.get(link_type="data", mime="json").url
+                url = fix_geoserver_url(url)
+                response = requests.get(url, verify=verify_tls)
+                response.raise_for_status()
+                files[DATA_FILE] = ("data.json", response.content)
+            # or as GeoTIFF
+            elif resource.subtype == "raster":
+                url = resource.link_set.get(link_type="data", mime="image/tiff").url
+                url = fix_geoserver_url(url)
+                response = requests.get(url, verify=verify_tls)
+                response.raise_for_status()
+                files[DATA_FILE] = ("data.tiff", response.content)
+        except Exception as e:
+            logger.error(f"Failed to load data: {url}", e)
+            raise e
 
         files[STYLE_FILE] = ("style.sld", resource.default_style.sld_body)
 
@@ -151,9 +202,8 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
     # TODO remove webhook.site
     # url = "https://webhook.site/20feca89-00f7-4d8b-943f-df7f20a6c901"
     data = {"force": session.force, "uuid": resource.uuid}
-    url = "https://webhook.site/c31981af-00ab-4110-aa38-e1975551b5a3"
-    data = { "force": session.force, "uuid": resource.uuid }
-    response = requests.post(url, files=files, auth=auth, data=data)
+    verify_tls = getattr(settings, "PUSH_TO_REMOTE_VERIFY_REMOTE_TLS", True)
+    response = requests.post(url, files=files, auth=auth, data=data, verify=verify_tls)
     response.raise_for_status()
 
 

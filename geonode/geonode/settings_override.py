@@ -39,7 +39,7 @@ LOGGING = {
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "handlers": {
         "console": {
-            "level": "ERROR",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -50,13 +50,17 @@ LOGGING = {
         },
     },
     "loggers": {
+        "sync": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
         "django": {
             "handlers": ["console"],
             "level": "ERROR",
         },
         "geonode": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "DEBUG",
         },
         "geoserver-restconfig.catalog": {
             "handlers": ["console"],
@@ -87,6 +91,7 @@ LOGGING = {
 
 IMPORTER_HANDLERS = (
     "importer_datapackage.handlers.datapackage.handler.DataPackageFileHandler",
+    # "sync.handlers.handler.PushedDatasetHandler",
     *IMPORTER_HANDLERS,
 )
 
