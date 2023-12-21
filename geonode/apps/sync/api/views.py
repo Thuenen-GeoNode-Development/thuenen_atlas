@@ -17,8 +17,8 @@ from rest_framework import permissions
 from oauth2_provider.contrib import rest_framework
 
 from ..apps import BASE_FILE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
-from ..models import RemotePushJob
-from .serializers import RemotePushJob
+
+from ..serializers import create_serializer
 
 logger = logging.getLogger(__name__)
 
@@ -30,18 +30,24 @@ class ReceivePushedDataViewSet(APIView):
         rest_framework.OAuth2Authentication,
     ]
     permission_classes = [permissions.IsAdminUser]
-    serializer_class = RemotePushJob
 
     @action(detail=False, methods=["post"])
     def post(self, request, format=None):
         
-        resource = self._parse_resource(request.FILES[BASE_FILE])
-        resources_exists = ResourceBase.objects.get(uuid = resource.uuid).exists()
-        
-        if resources_exists and not request.data.force:
+        uuid = request.data["uuid"]
+        resources_exists = ResourceBase.objects.filter(uuid = uuid).exists()
+        if resources_exists and request.data["force"] == "False":
             return JsonResponse(status=400, data={
-                "error": f"Resource '{resource.uuid}' exists and 'force' is not true!",
+                "error": f"Resource {uuid} exists and force is not true!"
             })
+        
+        resource_json = json.load(request.FILES[BASE_FILE])
+        resource_type = resource_json["resource_type"]
+        _resource_type, _serializer = resolve_type_serializer(resource_type)
+        data = _serializer(data=resource_json)
+        
+        sync_serializer = create_serializer(data.get_model())
+        data = sync_serializer(json.load(resource_json))
         
         data = {
             "uuid": request.data.uuid,
@@ -100,8 +106,3 @@ class ReceivePushedDataViewSet(APIView):
 
         return JsonResponse(resource)
 
-    def _parse_resource(base_file):
-        resource_json = json.load()
-        resource_type = resource_json["resource_type"]
-        _resource_type, _serializer = resolve_type_serializer(resource_type)
-        return _serializer(data=resource_json)

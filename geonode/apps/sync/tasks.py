@@ -91,9 +91,9 @@ def remote_push_job_task(session_id: int, job_id: int) -> RemotePushJob.Status:
             push_resource(session, job)
             logger.info(f"Job {job} finished successfully")
             return job.finish(RemotePushJob.Status.SUCCESS)
-        except Exception as error:
-            logger.warning(f"Job {job} failed: {error}")
-            return job.finish(RemotePushJob.Status.FAILURE, repr(error))
+        except requests.HTTPError as error:
+            logger.warning(f"Job {job} failed: {error.response.text}")
+            return job.finish(RemotePushJob.Status.FAILURE, repr(error.response.text))
     else:
         return job.status
 
