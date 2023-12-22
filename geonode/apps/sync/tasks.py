@@ -8,14 +8,14 @@ from zipfile import ZipFile, ZipInfo
 from celery import group
 
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 
 from geonode.celery_app import app
+from geonode.resource.api.utils import resolve_type_serializer
 from geonode.storage.manager import StorageManager
 
-from .apps import BASE_FILE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
+from .apps import BASE_FILE, ORIG_RESOURCE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
 from .models import RemotePushJob, RemotePushSession
 from .serializers import create_serializer
 
@@ -93,7 +93,10 @@ def remote_push_job_task(session_id: int, job_id: int) -> RemotePushJob.Status:
             return job.finish(RemotePushJob.Status.SUCCESS)
         except requests.HTTPError as error:
             logger.warning(f"Job {job} failed: {error.response.text}")
-            return job.finish(RemotePushJob.Status.FAILURE, repr(error.response.text))
+            return job.finish(RemotePushJob.Status.FAILURE, error.response.text)
+        except Exception as error:
+            logger.warning(f"Job {job} failed: {error}")
+            return job.finish(RemotePushJob.Status.FAILURE, repr(error))
     else:
         return job.status
 
@@ -153,11 +156,21 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
     resource = job.resource.polymorphic_ctype.get_object_for_this_type(pk=job.resource.pk)
     storageManager = StorageManager()
 
+
+    resource_type = resource.resource_type
+    _resource_type, _serializer = resolve_type_serializer(resource_type)
+    data_serializer = _serializer()
+    orig_resource = data_serializer.to_representation(resource)
     files = files = {
         BASE_FILE: (
-            "resource.json",
+            "pushed_resource.json",
             io.StringIO(resource_to_json(resource)),
             "application/json",
+        ),
+        ORIG_RESOURCE: (
+            "orig_resource.json",
+            io.StringIO(json.dumps(orig_resource, cls=DjangoJSONEncoder)),
+            "application/json"
         ),
     }
 
@@ -183,14 +196,14 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
                 url = fix_geoserver_url(url)
                 response = requests.get(url, verify=verify_tls)
                 response.raise_for_status()
-                files[DATA_FILE] = ("data.json", response.content)
+                files[DATA_FILE] = (f"{resource.name}.json", response.content, "application/json")
             # or as GeoTIFF
             elif resource.subtype == "raster":
                 url = resource.link_set.get(link_type="data", mime="image/tiff").url
                 url = fix_geoserver_url(url)
                 response = requests.get(url, verify=verify_tls)
                 response.raise_for_status()
-                files[DATA_FILE] = ("data.tiff", response.content)
+                files[DATA_FILE] = (f"{resource.name}.tiff", response.content, "image/tiff")
         except Exception as e:
             logger.error(f"Failed to load data: {url}", e)
             raise e

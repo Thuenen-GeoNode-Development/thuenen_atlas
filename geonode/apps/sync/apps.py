@@ -8,7 +8,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-BASE_FILE = "resource"
+BASE_FILE = "pushed_resource"
+ORIG_RESOURCE = "orig_resource"
 THUMBNAIL_FILE = "thumbnail"
 STYLE_FILE = "style"
 DATA_FILE = "data"
