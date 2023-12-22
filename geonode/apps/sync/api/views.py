@@ -12,6 +12,7 @@ from django.conf import settings
 from django.apps import apps
 
 from geonode.base.models import ResourceBase
+from geonode.resource.models import ExecutionRequest
 from geonode.base.api.serializers import ResourceBaseSerializer, BaseDynamicModelSerializer
 
 from rest_framework.views import APIView
@@ -88,32 +89,61 @@ class ReceivePushedDataViewSet(APIView):
             logging.error("unable to import pushed data", e)
             return JsonResponse(status=500, data=e)
         
-        # TODO handle style
+        def continue_after_import(execution_id):
+            req = ExecutionRequest.objects.filter(exec_id=execution_id)
+            status = req.get().status
+            if (status == ExecutionRequest.STATUS_FINISHED):
+                # TODO handle style
 
-        # TODO handle thumbnail
+                # TODO handle thumbnail
 
-        # TODO handle permissions
+                # TODO handle permissions
+                
+                # TODO handle groups and owner
+                
+                # TODO handle keywords, licenses, ... actually the whole resource file
+                
+                # TODO if relevant: persist / override sidecar files
+                subtype = pushed_resource["subtype"]
+                if subtype == "vector":
+                    
+                    # TODO prepare GeoJSON import
+
+                    pass
+                elif subtype == "raster":
+                    # TODO prepare raster import
+
+                    pass
+                else:
+                    return JsonResponse(status=500, data={
+                        "error": f"Cannot handle subtype {subtype}"
+                    })
+
+                return JsonResponse(status=201, data={}, headers={
+                    "Location": f"{settings.SITEURL}catalogue/uuid/{uuid}"
+                })
+            else:
+                return JsonResponse(status=500, data={
+                    "error": "Handling pushed resource after importing data failed!"
+                })
         
-        # TODO handle groups and owner
-        
-        # TODO handle keywords, licenses, ... actually the whole resource file
-        
-        # TODO if relevant: persist / override sidecar files
-        subtype = resource.subtype
-        if subtype == "vector":
+        try:
+            payload = json.loads(response.content.decode("utf-8"))
+            execution_id = payload["execution_id"]
             
-            # TODO prepare GeoJSON import
+            req = ExecutionRequest.objects.get(exec_id=execution_id)
+            while req.status.lower() in ['ready', 'running']:
+                # TODO limit wait for completion
+                time.sleep(5)
+                req.refresh_from_db()
 
-            pass
-        elif subtype == "raster":
-            # TODO prepare raster import
-
-            pass
-        else:
+            return continue_after_import(execution_id)
+                
+        except Exception as e:
+            logger.error(f"Execution request {execution_id} failed!", e)
             return JsonResponse(status=500, data={
-                "error": f"Cannot handle subtype {subtype}"
+                "error": "Import data failed! Refer to the logs."
             })
-
 
 
 def _get_api_serializer(app) -> BaseDynamicModelSerializer:
