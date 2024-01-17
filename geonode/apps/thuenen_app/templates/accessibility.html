@@ -1,0 +1,85 @@
+{% extends "geonode_base.html" %}
+
+{% load i18n %}
+{% block title %} {% trans "Statement on accessibility" %} — {{ block.super }} {% endblock %}
+
+{% block body_outer %}
+    <div class="page-header">
+        <h2>{% trans "Statement on accessibility" %}</h2>
+    </div>
+    {% blocktrans %}
+        <p>This statement on accessibility applies to the website {{ SITEURL }}.
+        </p>
+        <h3>Accessibility of this website</h3>
+        <p><br>The Johann Heinrich von Thünen Institute endeavors to make its website accessible in accordance with the
+            national legal provisions for the implementation of Directive (EU) 2016/2102 of the European Parliament and
+            the Council.
+        </p>
+        <p>This website was created in 2021 and is not yet completely accessible. The requirements of the current BITV
+            (Ordinance on Accessible Information Technology) have only been partially met.
+        </p>
+        <p>The site is currently being revised and will be relaunched shortly. A test of accessibility will be carried
+            out for the relaunched website and the test results will be published here.
+        </p>
+        <h3>Which areas are not accessible?</h3>
+        <ul>
+            <li>Our interactive graphics and maps are not accessible. We will provide this with a suitable alternative
+                text soon
+            </li>
+            <li>Some of our PDF documents are accessible. Many documents are old documents. These documents cannot be
+                subsequently revised. We have set the goal of offering accessible PDF files in the future or offering
+                the content in HTML format instead.
+            </li>
+            <li>Most of our videos are not accessible. Some subtitles are available. For newly posted videos, we
+                endeavor to provide subtitles as soon as possible.
+            </li>
+        </ul><h3>When was the statement on accessibility created or updated?</h3>
+        <p>This statement was created or revised on 10/20/2021.</p>
+
+        <h2>Feedback und contact</h2>
+        <p>Have you noticed any deficiencies in the access to our website? Then you are welcome to contact us.
+        </p>
+        <p>You can contact us by E-mail, fax, post or telephone:
+        </p>
+        <p> Johann Heinrich von Thünen Institute <br>Bundesallee 50 <br>38116 Braunschweig
+        </p>
+        <p>Telefon: + 49 531 596 1003<br>Fax: + 49 531 596 1099
+        </p>
+        <p>Mail: <a href="javascript:linkTo_UnCryptMailto('ocknvq,kphqBvjwgpgp0fg');"
+                    title="Öffnet E-Mail in neuem Fenster">info<span>@</span><span
+                style="display:none;">&nbsp;&nbsp;</span>thuenen<span>.</span><span
+                style="display:none;">&nbsp;&nbsp;</span>de</a></p>
+
+
+        <h2>Arbitration procedure</h2>
+        <p>The Federal Government Commissioner for Matters relating to Disabled Persons has an arbitration service in
+            accordance with Section 16 BGG. The arbitration service has the task of settling disputes between people
+            with disabilities and federal public authorities. You can turn to the arbitration service, if you are not
+            satisfied with the answers from the above contact option.
+        </p>
+        <p> It's not about finding winners or losers. Rather, the aim is to find a joint solution to a problem out of
+            court with the help of the arbitration service.
+        </p>
+        <p>The arbitration procedure is free of charge. You also do not need legal assistance.
+        </p>
+        <p>You can find complete information about the arbitration procedure on the website of the arbitration service.
+            There you can read about how an arbitration procedure works and how you can apply for arbitration. You can
+            also submit the application in easy read or German sign language.
+        </p>
+        <p>You can reach the arbitration service at the following address:
+        </p>
+        <p>Arbitration Service according to the German Act on Equal Opportunities for Persons with Disabilities
+        </p>
+        <p>Mauerstraße 53 <br>10117 Berlin
+        </p>
+        <p>Telefon: +49 30 18 527 2805 <br>Fax: +49 30 18 527 2901
+        </p>
+        <p>E-Mail: <a href="javascript:linkTo_UnCryptMailto('ocknvq,kphqBuejnkejvwpiuuvgnng/dii0fg');"
+                      title="Öffnet E-Mail in neuem Fenster">info<span>@</span><span
+                style="display:none;">&nbsp;&nbsp;</span>schlichtungsstelle-bgg<span>.</span><span
+                style="display:none;">&nbsp;&nbsp;</span>de </a><br>Internet: <a
+                href="http://www.schlichtungsstelle-bgg.de" title="Öffnet externen Link in neuem Fenster"
+                target="_blank" class="external-link-new-window">www.schlichtungsstelle-bgg.de</a></p>
+
+    {% endblocktrans %}
+{% endblock %}
