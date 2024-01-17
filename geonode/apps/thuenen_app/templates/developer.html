@@ -1,0 +1,103 @@
+{% extends "geonode_base.html" %}
+
+{% load i18n %}
+{% block title %} {% trans "Information for Developers" %} — {{ block.super }} {% endblock %}
+
+{% block body_outer %}
+<div class="page-header">
+  <h2>{% trans "Information for Developers" %}</h2>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    {% blocktrans %}
+    <h2>Thünen-Atlas Software</h2>
+    <p>The Thünen-Atlas is built using the open source software stack <a href="https://geonode.org/">GeoNode</a>. We encourage you to use the Thünen-Atlas and GeoNode to build new applications using the components and resources it provides. This page is a starting point for developers interested in taking full advantage of those. It also includes links to the project's source code so anyone can build and customize their own GeoNode based data portal.</p>
+    <p>All the code that runs the Thünen-Atlas is based on the GeoNode project and is open source. The code is available at <a href="https://github.com/GeoNode/geonode">https://github.com/GeoNode/geonode/</a>. The issue tracker for the project is at <a href="https://github.com/GeoNode/geonode/issues">https://github.com/GeoNode/geonode/issues</a>.</p>
+    <h3>Additional funding</h3>
+    <p>The Thünen-Atlas development was supported by the German Research Foundation DFG under the grant agreement number 442032008 (<a href="https://www.nfdi4biodiversity.org/en/" target="_blank">NFDI4Biodiversity</a>). The project is part of <a href="https://www.nfdi.de/" target="_blank">NFDI</a>, the National Research Data Infrastructure Programme in Germany.</p>
+    <h2>Provided Services</h2>
+    <h3>OGC Services</h3>
+    <p>The data in this application is served using open standards endorsed by ISO and the <a href="https://opengeospatial.org/">Open Geospatial Consortium</a>. In particular, WMS (Web Map Service) is used for accessing maps, WFS (Web Feature Service) is used for accessing vector data, and WCS (Web Coverage Service) is used for accessing raster data. You can use these services in your own applications like GIS clients (<a href="https://qgis.org/">QGIS</a>, <a href="https://grass.osgeo.org/">GRASS</a>, ArcGIS) or using libraries such as OpenLayers, GeoTools, and OGR (all of which are open-source software and available at zero cost). Additionally, CSW (Catalog Service for the Web) supports access to collections of descriptive information (metadata) about data and services.</p>
+
+    <h3>REST API</h3>
+    <p>Additionally, to the geodata based OGC Services the Thünen-Atlas provides a REST API. You can take a look at the REST-APIs self-description <a href="{{SITEURL}}api/v2/schema/swagger-ui/">here</a>.</p>
+
+    <h2>Examples</h2>
+    <h3>REST API</h3>
+    <p>To get all Resources as a JSON encoded result you can call <code>{{SITEURL}}api/v2/resources?format=json</code></p>
+    <p>To get the resources with UUID <code>4ffecb75-2236-4953-86a4-e32215f3ced7</code> you shall call <code>{{SITEURL}}api/v2/resources?page_size=20&page=1&filter{uuid.icontains}=4ffecb75-2236-4953-86a4-e32215f3ced7</code></p>
+
+    <h3>CSW</h3>
+    <p>To interact with GeoNode's CSW you can use any CSW client (QGIS MetaSearch, GRASS, etc.). The following example illustrates a simple invocation using the OWSLib Python package:</p>
+    <div class="code-block-caption">
+    <pre>
+        <code>
+from owslib.csw import CatalogueServiceWeb
+from owslib.fes import PropertyIsEqualTo, PropertyIsLike, BBox
+
+# variables
+csw_endpoint = '{{CATALOGUE_BASE_URL}}'
+search_text = 'agrar'
+
+# connect to csw
+csw = CatalogueServiceWeb(csw_endpoint)
+
+# 1. query by search string
+text_query = PropertyIsEqualTo('csw:AnyText', search_text)
+csw.getrecords2(constraints=[text_query], maxrecords=20)
+# print response titles
+for rec in csw.records:
+    print(csw.records[rec].title)
+        </code>
+    </pre>
+    </div>
+
+
+    <h3>WMS</h3>
+
+    <p>To include a GeoNode map layer in an OpenLayers map, first find the name for that layer. This is found in the layer's <code>name</code> field (not <code>title</code>) of the layer list. For this example, we will use the <a href="https://atlas.thuenen.de/layers/geonode_data_ingest:geonode:hydro_survey_megs">Hydrographic Data of the Mackerel and Horse Mackerel Egg Survey</a> layer, whose name is <code>geonode:hydro_survey_megs</code>. Then, create an instance of OpenLayers.Layer.WMS:</p>
+    <p><code>var geonodeLayer = new OpenLayers.Layer.WMS("Thünen-Atlas", "{{SITEURL}}geoserver/wms",{ layers: "geonode:hydro_survey_megs" });</code></p>
+
+    <h3>WFS</h3>
+    <p>To get data from the GeoNode web services use the WFS protocol. To fetch available datasets you can send a GetCapabilites request:</p>
+    </p><code>{{SITEURL}}geoserver/wfs?request=GetCapabilities</code></p>
+
+    <p>For example, to get the full <a href="{{SITEURL}}layers/geonode_data_ingest:geonode:hydro_survey_megs">Hydrographic Data of the Mackerel and Horse Mackerel Egg Survey</a> (see WMS) use:</p>
+    <p><code>{{SITEURL}}geoserver/wfs?request=GetFeature&#38;typeName=geonode:hydro_survey_megs&#38;outputformat=SHAPE-ZIP</code></p>
+    <p>Changing output format to <code>json</code>, <code>GML2</code>, <code>GML3</code>, or <code>csv</code> will get data in those formats. The WFS protocol also can handle more precise queries, specifying a bounding box or various spatial and non-spatial filters based on the attributes of the data.</p>
+    {% endblocktrans %}
+  </div>
+
+  <div class="col-md-4">
+    <h2>{% trans "GeoNode's Web Services" %}</h2>
+    <p>{% trans "GeoNode's Web Services are available from the following URLs:" %}</p>
+    <table class="table table-striped table-condensed">
+      <tr>
+        <td><strong>{% trans "Dynamic tiles via WMS:" %}</strong></td>
+        <td><a href="{{GEOSERVER_BASE_URL}}ows?service=wms&version=1.3.0&request=GetCapabilities">WMS 1.3.0</a></td>
+      </tr>
+      <tr>
+        <td><strong>{% trans "Vector data via WFS:" %}</strong></td>
+        <td><a href="{{GEOSERVER_BASE_URL}}ows?service=wfs&version=2.0.0&request=GetCapabilities">WFS 2.0.0</a></td>
+      </tr>
+      <tr>
+        <td><strong>{% trans "Raster data via WCS:" %}</strong></td>
+        <td><a href="{{GEOSERVER_BASE_URL}}ows?service=WCS&version=2.0.1&request=GetCapabilities">WCS 2.0.1</a></td>
+      </tr>
+      <tr>
+        <td><strong>{% trans "Metadata search via CSW:" %}</strong></td>
+        <td><a href="{{CATALOGUE_BASE_URL}}?service=CSW&version=2.0.2&request=GetCapabilities">CSW 2.0.2</a></td>
+      </tr>
+      <tr>
+        <td><strong>{% trans "Metadata search via OpenSearch:" %}</strong></td>
+        <td><a href="{{CATALOGUE_BASE_URL}}?mode=opensearch&service=CSW&version=2.0.2&request=GetCapabilities">OpenSearch 1.0</a></td>
+      </tr>
+      <tr>
+        <td><strong>{% trans "Resources via REST API" %}</strong></td>
+        <td><a href="{{SITEURL}}api/v2/schema/swagger-ui/">Swagger UI</a></td>
+      </tr>
+    </table>
+  </div>
+</div>
+{% endblock %}
