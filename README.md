@@ -60,12 +60,12 @@ docker-compose up -d --build
 ```
 
 You can follow the logs: `docker-compose logs -f <optional-service-name>`.
-Locate your browser to http://172.17.0.1/ to access the GeoNode UI.
+Locate your browser to http://172.18.0.1/ to access the GeoNode UI.
 
 
 > :bulb: **Note**
 >
-> We make GeoNode available under IP `172.17.0.1` so that no components try to communicate via `localhost` (each container has their own loopback interface).
+> We make GeoNode available under IP `172.18.0.1` so that no components try to communicate via `localhost` (each container has their own loopback interface).
 
 
 ### TLS Config
@@ -143,13 +143,13 @@ When seeing the above output, you can watch logging via `docker-compose logs -f`
 
 The devcontainer setup does not start GeoNode automatically.
 Once the container is ready, you can press `F5` to start debugging GeoNode.
-Locate your browser to `http://172.17.0.1:8001`.
+Locate your browser to `http://172.18.0.1:8001`.
 
 > :bulb: **Note**
 >
 > In the devcontainer setup, GeoNode is not available via nginx!
 > Starting GeoNode in devcontainer actually runs `python manage.py runserver` which starts a lightweight development web server based on WSGI.
-> However, GeoServer is routed via nginx and available from http://172.17.0.1/geoserver.
+> However, GeoServer is routed via nginx and available from http://172.18.0.1/geoserver.
 
 
 
