@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.4'
 
 # Common Django template for GeoNode and Celery services below
 x-common-django:
@@ -50,6 +50,8 @@ services:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=False
+    networks:
+      - thuenen_network
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
 
@@ -63,6 +65,8 @@ services:
       - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=True
+    networks:
+      - thuenen_network
     entrypoint: ["/usr/src/geonode/entrypoint.sh"]
     command: "celery-cmd"
 
@@ -76,7 +80,7 @@ services:
     container_name: nginx4${COMPOSE_PROJECT_NAME}
     env_file: ./.env
     environment:
-      - HTTPS_HOST=${GEONODE_LB_HOST_IP}
+      #- HTTPS_HOST=${GEONODE_LB_HOST_IP}
       # emtpy HTTP_x to only allow HTTPS connections
       - HTTP_HOST=${GEONODE_LB_HOST_IP}
       - HTTP_PORT=${GEONODE_LB_PORT}
@@ -84,13 +88,16 @@ services:
       - RESOLVER=127.0.0.11
     ports:
       - "80:80"
-      - "443:443"
+      #- "443:443"
     volumes:
       - statics:/mnt/volumes/statics
       # Link to a custom certificate here
       #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
       #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
     restart: on-failure
+    networks:
+      thuenen_network:
+        ipv4_address: 172.18.0.100
 
   # Geoserver backend
   geoserver:
@@ -107,8 +114,6 @@ services:
       interval: 60s
       timeout: 10s
       retries: 10
-    ports:
-      - "8080:8080"
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
@@ -121,6 +126,8 @@ services:
         condition: service_healthy
       data-dir-conf:
         condition: service_healthy
+    networks:
+      - thuenen_network
 
   data-dir-conf:
     build:
@@ -135,6 +142,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: "ls -A '/geoserver_data/data' | wc -l"
+    networks:
+      - thuenen_network
 
   # PostGIS database.
   db:
@@ -152,6 +161,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: "pg_isready -d postgres -U postgres"
+    networks:
+      - thuenen_network
 
   # Vanilla RabbitMQ service. This is needed by celery
   rabbitmq:
@@ -160,6 +171,8 @@ services:
     volumes:
       - rabbitmq:/var/lib/rabbitmq
     restart: unless-stopped
+    networks:
+      - thuenen_network
 
 volumes:
   statics:
@@ -178,3 +191,10 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-tmp
   rabbitmq:
     name: ${COMPOSE_PROJECT_NAME}-rabbitmq
+
+networks:
+  thuenen_network:
+    name: thuenen_network
+    ipam:
+      config:
+        - subnet: "172.18.0.1/16"

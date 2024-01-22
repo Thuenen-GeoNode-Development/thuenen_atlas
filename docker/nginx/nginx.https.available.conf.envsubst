@@ -7,7 +7,6 @@ ssl_session_timeout 5m;
 
 # this is the actual HTTPS host
 server {
-    #listen              $HTTPS_PORT ssl; # HTTPS_PORT is not part of the envsub in entrypoint.sh and WILL NOT get substituted
     listen              443 ssl;
     server_name         $HTTPS_HOST;
     server_tokens off;
