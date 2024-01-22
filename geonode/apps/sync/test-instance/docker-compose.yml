@@ -1,0 +1,204 @@
+version: '3.4'
+
+# Common Django template for GeoNode and Celery services below
+x-common-django:
+  &default-common-django
+  image: ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}${COMPOSE_PROJECT_NAME}_django:${GEONODE_BASE_IMAGE_VERSION}-${PROJECT_VERSION}
+  build:
+    context: ./../../../../docker/geonode
+    dockerfile: Dockerfile
+    args:
+      - BASE_IMAGE_VERSION=${GEONODE_BASE_IMAGE_VERSION}
+  restart: no
+  env_file:
+    - ./.env
+  volumes:
+    # configuration
+    - ../../../geonode/settings_override.py:/usr/src/geonode/geonode/settings_override.py
+    - ../../../templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
+    - ../../../fixtures:/usr/src/geonode/fixtures
+    # contrib apps
+    - ../../atlas:/usr/src/geonode/atlas
+    - ../../thuenen_app:/usr/src/geonode/thuenen_app
+    - ../../externalapplications/externalapplications:/usr/src/geonode/externalapplications
+    - ../:/usr/src/geonode/sync
+    # volumes
+    - statics:/mnt/volumes/statics
+    - geoserver-data-dir:/geoserver_data/data
+    - backup-restore:/backup_restore
+    - data:/data
+    - tmp:/tmp
+  depends_on:
+    db:
+      condition: service_healthy
+    data-dir-conf:
+      condition: service_healthy
+  networks:
+    - pushing_geonode
+
+services:
+
+  # Our custom django application. It includes Geonode.
+  django:
+    << : *default-common-django
+    container_name: django4${COMPOSE_PROJECT_NAME}
+    healthcheck:
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8000/"
+      start_period: 60s
+      interval: 60s
+      timeout: 10s
+      retries: 10
+    environment:
+      - INVOKE_LOG_STDOUT=true
+      - DJANGO_SETTINGS_MODULE=geonode.settings_override
+      - IS_CELERY=False
+    entrypoint: ["/usr/src/geonode/entrypoint.sh"]
+    command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
+    networks:
+      - pushing_geonode
+
+  # Celery worker that executes celery tasks created by Django.
+  celery:
+    << : *default-common-django
+    container_name: celery4${COMPOSE_PROJECT_NAME}
+    depends_on:
+      - django
+    environment:
+      - INVOKE_LOG_STDOUT=true
+      - DJANGO_SETTINGS_MODULE=geonode.settings_override
+      - IS_CELERY=True
+    entrypoint: ["/usr/src/geonode/entrypoint.sh"]
+    command: "celery-cmd"
+    networks:
+      - pushing_geonode
+
+  # Nginx is serving django static and media files and proxies to django and geonode
+  geonode:
+    build:
+      context: ./../../../../docker/nginx
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_VERSION=${NGINX_BASE_IMAGE_VERSION}
+    container_name: nginx4${COMPOSE_PROJECT_NAME}
+    env_file: ./.env
+    environment:
+      - HTTPS_HOST=${GEONODE_LB_HOST_IP}
+      # emtpy HTTP_x to only allow HTTPS connections
+      - HTTP_HOST=${GEONODE_LB_HOST_IP}
+      - HTTP_PORT=${GEONODE_LB_PORT}
+      - LETSENCRYPT_MODE=disabled
+      - RESOLVER=127.0.0.11
+    ports:
+      - "9443:443"
+    volumes:
+      - ./geonode.conf.envsubst:/etc/nginx/sites-enabled/geonode.conf.envsubst
+      - statics:/mnt/volumes/statics
+      # Link to a custom certificate here
+      #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
+      #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
+    restart: on-failure
+    networks:
+      - pushing_geonode
+
+  # Geoserver backend
+  geoserver:
+    build:
+      context: ./../../../../docker/geoserver
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
+    container_name: geoserver4${COMPOSE_PROJECT_NAME}
+    env_file: ./.env
+    healthcheck:
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8080/geoserver/ows"
+      start_period: 60s
+      interval: 60s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - ./adjust-oauth-config.sh:/start-with-fixed-oauth.sh
+      - statics:/mnt/volumes/statics
+      - geoserver-data-dir:/geoserver_data/data
+      - backup-restore:/backup_restore
+      - data:/data
+      - tmp:/tmp
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      data-dir-conf:
+        condition: service_healthy
+    networks:
+      pushing_geonode:
+        ipv4_address: 172.16.0.100
+    entrypoint: ["/start-with-fixed-oauth.sh"]
+
+  data-dir-conf:
+    build:
+      context: ./../../../../docker/geoserver_data
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_VERSION=${GEOSERVER_DATA_BASE_IMAGE_VERSION}
+    container_name: gsconf4${COMPOSE_PROJECT_NAME}
+    entrypoint: sleep infinity
+    volumes:
+      - geoserver-data-dir:/geoserver_data/data
+    restart: unless-stopped
+    healthcheck:
+      test: "ls -A '/geoserver_data/data' | wc -l"
+    networks:
+      - pushing_geonode
+
+  # PostGIS database.
+  db:
+    build:
+      context: ./../../../../docker/postgresql
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+    command: postgres -c "max_connections=${POSTGRES_MAX_CONNECTIONS}"
+    container_name: db4${COMPOSE_PROJECT_NAME}
+    env_file: ./.env
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - dbbackups:/pg_backups
+    restart: unless-stopped
+    healthcheck:
+      test: "pg_isready -d postgres -U postgres"
+    networks:
+      - pushing_geonode
+
+  # Vanilla RabbitMQ service. This is needed by celery
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    container_name: rabbitmq4${COMPOSE_PROJECT_NAME}
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    restart: unless-stopped
+    networks:
+      - pushing_geonode
+
+volumes:
+  statics:
+    name: ${COMPOSE_PROJECT_NAME}-statics
+  geoserver-data-dir:
+    name: ${COMPOSE_PROJECT_NAME}-gsdatadir
+  dbdata:
+    name: ${COMPOSE_PROJECT_NAME}-dbdata
+  dbbackups:
+    name: ${COMPOSE_PROJECT_NAME}-dbbackups
+  backup-restore:
+    name: ${COMPOSE_PROJECT_NAME}-backup-restore
+  data:
+    name: ${COMPOSE_PROJECT_NAME}-data
+  tmp:
+    name: ${COMPOSE_PROJECT_NAME}-tmp
+  rabbitmq:
+    name: ${COMPOSE_PROJECT_NAME}-rabbitmq
+
+networks:
+  pushing_geonode:
+    name: geonode_pushing
+    ipam:
+      config:
+        - subnet: "172.16.0.1/24"

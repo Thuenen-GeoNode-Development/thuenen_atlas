@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 BASE_FILE = "pushed_resource"
-ORIG_RESOURCE = "orig_resource"
+XML_FILE = "metadata"
 THUMBNAIL_FILE = "thumbnail"
 STYLE_FILE = "style"
 DATA_FILE = "data"

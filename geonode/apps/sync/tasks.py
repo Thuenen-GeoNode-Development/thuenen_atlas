@@ -7,6 +7,8 @@ import typing
 from zipfile import ZipFile, ZipInfo
 from celery import group
 
+from django.http import HttpRequest
+from django.contrib.auth import get_user_model
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
@@ -15,7 +17,7 @@ from geonode.celery_app import app
 from geonode.resource.api.utils import resolve_type_serializer
 from geonode.storage.manager import StorageManager
 
-from .apps import BASE_FILE, ORIG_RESOURCE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
+from .apps import BASE_FILE, XML_FILE, DATA_FILE, STYLE_FILE, THUMBNAIL_FILE
 from .models import RemotePushJob, RemotePushSession
 from .serializers import create_serializer
 
@@ -92,62 +94,73 @@ def remote_push_job_task(session_id: int, job_id: int) -> RemotePushJob.Status:
             logger.info(f"Job {job} finished successfully")
             return job.finish(RemotePushJob.Status.SUCCESS)
         except requests.HTTPError as error:
-            logger.warning(f"Job {job} failed: {error.response.text}")
+            logger.warning(f"Job {job} failed: {error.response.text}", exc_info=True)
             return job.finish(RemotePushJob.Status.FAILURE, error.response.text)
         except Exception as error:
-            logger.warning(f"Job {job} failed: {error}")
+            logger.error(f"Job {job} failed: {error}", exc_info=True)
             return job.finish(RemotePushJob.Status.FAILURE, repr(error))
     else:
         return job.status
 
 
-def resource_to_json(resource):
+def resource_to_json(resource, *args, **kwargs):
+    # admin = get_user_model().objects.filter(is_superuser=True).first()
+    # request = HttpRequest()
+    # request.method = "GET"
+    # request.user = admin
+    # context = {
+    #     "request": request,
+    #     "format": "",
+    #     "view": None,
+    # }
+    # kwargs.setdefault('context', context)
+    # serializer = create_serializer(resource._meta.model)(*args, **kwargs)
     serializer = create_serializer(resource._meta.model)()
     representation = serializer.to_representation(resource)
     return json.dumps(representation, cls=DjangoJSONEncoder)
 
 
-def upload_resource(session: RemotePushSession, job: RemotePushJob):
-    logger.info(f"uploading resource {job.resource}")
-    # get the actual resource
-    resource = job.resource.polymorphic_ctype.get_object_for_this_type(pk=job.resource.pk)
-    storageManager = StorageManager()
+# def upload_resource(session: RemotePushSession, job: RemotePushJob):
+#     logger.info(f"uploading resource {job.resource}")
+#     # get the actual resource
+#     resource = job.resource.polymorphic_ctype.get_object_for_this_type(pk=job.resource.pk)
+#     storageManager = StorageManager()
 
-    zipped_bytes = io.BytesIO()
-    with ZipFile(zipped_bytes, "w") as zip_file:
-        if resource.files:
-            for idx, path in enumerate(resource.files):
-                basename = os.path.basename(path)
-                zip_file.write(path, basename)
-    zipped_bytes.seek(0)
+#     zipped_bytes = io.BytesIO()
+#     with ZipFile(zipped_bytes, "w") as zip_file:
+#         if resource.files:
+#             for idx, path in enumerate(resource.files):
+#                 basename = os.path.basename(path)
+#                 zip_file.write(path, basename)
+#     zipped_bytes.seek(0)
 
-    files = {
-        "base_file": ("file.zip", zipped_bytes, "application/zip"),
-        "zip_file": ("file.zip", zipped_bytes, "application/zip"),
-        "sld_file": ("style.xml", resource.default_style.sld_body, "text/xml"),
-        "xml_file": ("metadata.xml", io.StringIO(resource.metadata_xml), "text/xml"),
-        "resource_file": (BASE_FILE, io.StringIO(resource_to_json(resource)), "application/json"),
-        "thumbnail": (resource.thumbnail_path, storageManager.open(resource.thumbnail_path)),
-    }
+#     files = {
+#         "base_file": ("file.zip", zipped_bytes, "application/zip"),
+#         "zip_file": ("file.zip", zipped_bytes, "application/zip"),
+#         "sld_file": ("style.xml", resource.default_style.sld_body, "text/xml"),
+#         "xml_file": ("metadata.xml", io.StringIO(resource.metadata_xml), "text/xml"),
+#         "resource_file": (BASE_FILE, io.StringIO(resource_to_json(resource)), "application/json"),
+#         "thumbnail": (resource.thumbnail_path, storageManager.open(resource.thumbnail_path)),
+#     }
 
-    data = {
-        "force": session.force,
-        "uuid": resource.uuid,
-        "overwrite_existing_layer": session.force,
-    }
+#     data = {
+#         "force": session.force,
+#         "uuid": resource.uuid,
+#         "overwrite_existing_layer": session.force,
+#     }
 
-    # if resource.files:
-    #     for idx, path in enumerate(resource.files):
-    #         ext = path.split(".")[-1]
-    #         files[f"{ext}_file"] = (path, storageManager.open(path))
+#     # if resource.files:
+#     #     for idx, path in enumerate(resource.files):
+#     #         ext = path.split(".")[-1]
+#     #         files[f"{ext}_file"] = (path, storageManager.open(path))
 
-    auth = (session.remote.username, session.remote.password)
-    url = f"{session.remote.url}/api/v2/uploads/upload"
-    # TODO remove webhook.site
-    # url = "https://webhook.site/20feca89-00f7-4d8b-943f-df7f20a6c901"
-    verify_tls = getattr(settings, "PUSH_TO_REMOTE_VERIFY_REMOTE_TLS", True)
-    response = requests.post(url, files=files, auth=auth, data=data, verify=verify_tls, stream=False)
-    response.raise_for_status()
+#     auth = (session.remote.username, session.remote.password)
+#     url = f"{session.remote.url}/api/v2/uploads/upload"
+#     # TODO remove webhook.site
+#     # url = "https://webhook.site/20feca89-00f7-4d8b-943f-df7f20a6c901"
+#     verify_tls = getattr(settings, "PUSH_TO_REMOTE_VERIFY_REMOTE_TLS", True)
+#     response = requests.post(url, files=files, auth=auth, data=data, verify=verify_tls, stream=False)
+#     response.raise_for_status()
 
 
 def push_resource(session: RemotePushSession, job: RemotePushJob):
@@ -156,22 +169,13 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
     resource = job.resource.polymorphic_ctype.get_object_for_this_type(pk=job.resource.pk)
     storageManager = StorageManager()
 
-
-    resource_type = resource.resource_type
-    _resource_type, _serializer = resolve_type_serializer(resource_type)
-    data_serializer = _serializer()
-    orig_resource = data_serializer.to_representation(resource)
     files = files = {
         BASE_FILE: (
             "pushed_resource.json",
             io.StringIO(resource_to_json(resource)),
             "application/json",
         ),
-        ORIG_RESOURCE: (
-            "orig_resource.json",
-            io.StringIO(json.dumps(orig_resource, cls=DjangoJSONEncoder)),
-            "application/json"
-        ),
+        XML_FILE: ("metadata.xml", io.StringIO(resource.metadata_xml), "text/xml"),
     }
 
     if resource.files:
@@ -205,7 +209,7 @@ def push_resource(session: RemotePushSession, job: RemotePushJob):
                 response.raise_for_status()
                 files[DATA_FILE] = (f"{resource.name}.tiff", response.content, "image/tiff")
         except Exception as e:
-            logger.error(f"Failed to load data: {url}", e)
+            logger.error(f"Failed to load data: {url}", exc_info=True)
             raise e
 
         files[STYLE_FILE] = ("style.sld", resource.default_style.sld_body)
