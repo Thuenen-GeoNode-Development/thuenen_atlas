@@ -46,7 +46,6 @@ services:
       timeout: 10s
       retries: 10
     environment:
-      - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=False
     networks:
@@ -61,7 +60,6 @@ services:
     depends_on:
       - django
     environment:
-      - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=True
     networks:
