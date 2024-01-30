@@ -46,7 +46,6 @@ services:
       timeout: 10s
       retries: 10
     environment:
-      - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=False
     networks:
@@ -61,7 +60,6 @@ services:
     depends_on:
       - django
     environment:
-      - INVOKE_LOG_STDOUT=true
       - DJANGO_SETTINGS_MODULE=geonode.settings_override
       - IS_CELERY=True
     networks:
@@ -79,15 +77,15 @@ services:
     container_name: nginx4${COMPOSE_PROJECT_NAME}
     env_file: ./.env
     environment:
-      #- HTTPS_HOST=${GEONODE_LB_HOST_IP}
+      - HTTPS_HOST=${SITE_HOST_NAME}
       # emtpy HTTP_x to only allow HTTPS connections
-      - HTTP_HOST=${GEONODE_LB_HOST_IP}
+      #- HTTP_HOST=${GEONODE_LB_HOST_IP}
       - HTTP_PORT=${GEONODE_LB_PORT}
       - LETSENCRYPT_MODE=disabled
       - RESOLVER=127.0.0.11
     ports:
       - "80:80"
-      #- "443:443"
+      - "443:443"
     volumes:
       - statics:/mnt/volumes/statics
       # Link to a custom certificate here
