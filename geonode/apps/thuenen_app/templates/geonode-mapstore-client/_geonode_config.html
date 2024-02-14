@@ -180,6 +180,19 @@
             }
         ];
 
+        const addFilterTo = (filters=[], filterToAdd, groupId="") => {
+            if (groupId) {
+                filterGroup = filters.filter(item => item.id == groupId)
+                if (filterGroup) {
+                    filterGroup[0].items.push(filterToAdd);
+                }
+                return filters;
+            } else {
+                filters.push(filterToAdd);
+                return filters;
+            }
+        }
+
         const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
         window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
             if (overrideLocalConfig) {
@@ -194,21 +207,32 @@
                 var isSelectedPlugin = currentPlugin.name === selectedPluginName;
                 if (isSelectedPlugin) {
                     // apply configuration to the plugin
-                    const plugin = localConfig.plugins[pluginPageName][i]
+                    const plugin = localConfig.plugins[pluginPageName][i];
 
-                    const filtersFormItems = resourcesGridPluginFiltersFormItems
-                    filtersFormItems[0].items.push({
+                    const filtersFormItems = resourcesGridPluginFiltersFormItems;
+                    let filterItems = filtersFormItems[0].items
+                    filterItems = addFilterTo(filterItems, {
+                        "id": "tabular",
+                        "labelId": "gnhome.tabular",
+                        "type": "filter",
+                    }, 'dataset');
+
+                    filterItems = addFilterTo(filterItems, {
                         id: "externalapplication",
                         labelId: "externalapplications.filter",
                         type: "filter"
                     });
+                    filtersFormItems[0].items = filterItems;
+                    plugin.cfg.filtersFormItems = filtersFormItems;
+
                     localConfig.geoNodeCustomFilters = Object.assign(localConfig.geoNodeCustomFilters, {
                         "externalapplication": {
                             "filter{resource_type.in}": "externalapplication"
+                        },
+                        "tabular": {
+                            "filter{subtype.in}": "tabular"
                         }
                     });
-                    plugin.cfg.filtersFormItems = filtersFormItems
-
 
                     const menuItems = resourceGridPluginMenuItems
                     menuItems[0].items.push({
