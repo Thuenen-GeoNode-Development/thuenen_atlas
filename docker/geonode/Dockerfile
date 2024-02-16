@@ -1,5 +1,5 @@
 ARG BASE_IMAGE_VERSION
-FROM 52north/geonode:${BASE_IMAGE_VERSION}
+FROM 52north/geonode_thuenen:${BASE_IMAGE_VERSION}
 
 # geonode-project installs ldap per default
 # there the locale is set explicitly
