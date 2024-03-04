@@ -155,28 +155,34 @@
                 disableIf: '{!state("user")}'
             },
             {
-                labelId: 'gnhome.categories',
-                placeholderId: 'gnhome.categoriesPlaceholder',
                 type: 'select',
-                suggestionsRequestKey: 'categories'
+                facet: "category"
             },
             {
-                labelId: 'gnhome.keywords',
-                placeholderId: 'gnhome.keywordsPlaceholder',
                 type: 'select',
-                suggestionsRequestKey: 'keywords'
+                facet: "keyword"
             },
             {
-                labelId: 'gnhome.regions',
-                placeholderId: 'gnhome.regionsPlaceholder',
                 type: 'select',
-                suggestionsRequestKey: 'regions'
+                facet: 'place'
             },
             {
-                labelId: 'gnhome.owners',
-                placeholderId: 'gnhome.ownersPlaceholder',
                 type: 'select',
-                suggestionsRequestKey: 'owners'
+                facet: 'user'
+            },
+            {
+                type: "accordion",
+                style: "facet", // style can be facet or filter (checkbox)
+                facet: "thesaurus"
+            },
+            {
+                type: 'date-range',
+                filterKey: 'date',
+                labelId: 'gnviewer.dateFilter'
+            },
+            {
+                labelId: 'gnviewer.extent',
+                type: 'extent'
             }
         ];
 
