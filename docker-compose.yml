@@ -91,6 +91,8 @@ services:
       # Link to a custom certificate here
       #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
       #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
+      - /home/administrator/.ssh/cert_TI.pem:/geonode-certificates/autoissued/fullchain.pem
+      - /home/administrator/.ssh/key_TI.pem:/geonode-certificates/autoissued/privkey.pem
     restart: on-failure
     networks:
       thuenen_network:
@@ -117,6 +119,7 @@ services:
       - backup-restore:/backup_restore
       - data:/data
       - tmp:/tmp
+      - /mnt/gsdatadir_temp:/mnt/gsdatadir_temp
     restart: unless-stopped
     depends_on:
       db:

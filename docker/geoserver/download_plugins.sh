@@ -1,6 +1,6 @@
 #!/bin/bash
 # USAGE: ./download_plugins.sh GEOSERVER_VERSION PLUGINS
-# EXAMPLE: ./download_plugins.sh "2.23.0 "vectortiles netcdf"
+# EXAMPLE: ./download_plugins.sh "2.23.3 "vectortiles netcdf"
 GEOSERVER_VERSION=$1
 PLUGINS=$2
 
