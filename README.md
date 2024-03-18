@@ -198,7 +198,7 @@ Once an automated build PR has been merged, the geonode-mapstore-client submodul
 To do this run the command
 
 ```sh
-git submodule udpate --remote
+git submodule update --remote
 ```
 
 Alternatively, you may want to point to a specific submodule version:
