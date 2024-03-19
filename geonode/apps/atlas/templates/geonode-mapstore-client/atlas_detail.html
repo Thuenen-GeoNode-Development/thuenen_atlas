@@ -204,13 +204,13 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% endif %}
                 <div>
                     <p style="font-size: 22px">
                         <a href="/documents/?limit=50&offset=0&group__group_profile__slug__in={{ atlas_group.slug }}">
                             Weitere thematisch zugehörige Dokumente und Medien</a>
                     </p>
                 </div>
+                {% endif %}
             </div>
             {% endblock %}
 
