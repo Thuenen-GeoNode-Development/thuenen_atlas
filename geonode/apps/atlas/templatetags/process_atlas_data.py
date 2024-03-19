@@ -8,7 +8,7 @@ def createResourceArrays(resource):
     documents = []
     datasets = []
     for obj in resource:
-        if obj.resource_type == "map":
+        if obj.resource_type == "map" or obj.resource_type == "externalapplication":
             maps.append(obj)
         if obj.resource_type == "dataset":
             datasets.append(obj)
