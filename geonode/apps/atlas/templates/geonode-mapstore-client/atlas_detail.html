@@ -180,12 +180,14 @@
                     </div>
                     {% endfor %}
                 </div>
+                <!-- group facet filter is currently not supported
                 <div>
                     <p style="font-size: 22px">
                         <a href="/layers/?limit=50&offset=0&group__group_profile__slug__in={{ atlas_group.slug }}">
                             Weitere thematisch zugehörige Datensätze</a>
                     </p>
                 </div>
+                --> 
                 {% endif %}
 
                 {% if resourceTypes.documents|length > 0 %}
@@ -204,12 +206,14 @@
                     </div>
                     {% endfor %}
                 </div>
+                <!-- group facet filter is currently not supported
                 <div>
                     <p style="font-size: 22px">
                         <a href="/documents/?limit=50&offset=0&group__group_profile__slug__in={{ atlas_group.slug }}">
                             Weitere thematisch zugehörige Dokumente und Medien</a>
                     </p>
                 </div>
+                -->
                 {% endif %}
             </div>
             {% endblock %}
