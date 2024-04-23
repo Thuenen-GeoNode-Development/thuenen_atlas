@@ -1,0 +1,25 @@
+{% load i18n %}
+<footer class="gn-footer">
+        <ul>
+            <li>
+                <a href="{% url "developer" %}" class="nav-link">
+                    <span>{% trans "Developers" %}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url "accessibility" %}" class="nav-link">
+                    <span>{% trans "Accessibility" %}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url "legal-notice" %}" class="nav-link">
+                    <span>{% trans "Legal notice" %}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url "privacy-cookies" %}" class="nav-link">
+                    <span>{% trans "Privacy &#038; Cookies Policy" %}</span>
+                </a>
+            </li>
+        </ul>
+</footer>

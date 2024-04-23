@@ -19,6 +19,9 @@ def run_setup_hooks(*args, **kwargs):
         url(r'^accessibility/$',
             TemplateView.as_view(template_name='accessibility.html'),
             name='accessibility'),
+        url(r'^privacy-cookies/$',
+            TemplateView.as_view(template_name='privacy-cookies.html'),
+            name='privacy-cookies'),
     ]
 
 
