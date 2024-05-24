@@ -99,6 +99,12 @@ INSTALLED_APPS += (
     "thuenen_app",
 )
 
+# add extra translations
+# add to .po file in thuenen_atlas/geonode/apps/thuenen_app/locale
+LOCALE_PATHS += (
+    os.path.join(PROJECT_ROOT, 'thuenen_app', 'locale'),
+)
+
 # LDAP
 # WE DO NOT USE CONTRIB APP BUT
 # django-auth-ldap
