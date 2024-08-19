@@ -4,4 +4,4 @@
 [submodule "docker/geonode/geonode-mapstore-client"]
 	path = docker/geonode/geonode-mapstore-client
 	url = https://github.com/Thuenen-GeoNode-Development/geonode-mapstore-client.git
-	branch = thuenen_4.2.x
+	branch = thuenen_4.3.x

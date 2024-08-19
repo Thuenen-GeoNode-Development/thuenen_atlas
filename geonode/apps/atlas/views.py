@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import TemplateView
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.http import HttpResponse
 
 from .models import Atlas, AtlasCustomAppListing
