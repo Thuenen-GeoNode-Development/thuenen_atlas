@@ -110,7 +110,7 @@ For more information about configuring GeoNode, consult the [Settings reference]
 As listed above, `thuenen_atlas` comprises GeoNode components which include customizations.
 To get an overview, you'd simply `git diff <my_branch>..<upstream_branch> [-- [^]spec]` or compare it via GitHub:
 
-* [MapStore2](https://github.com/Thuenen-GeoNode-Development/MapStore2/compare/thuenen_2024.01.xx..geosolutions-it:master)
+* [MapStore2](https://github.com/Thuenen-GeoNode-Development/MapStore2/compare/thuenen_2024.01.xx..geosolutions-it:2024.01.xx)
 * [geonode-mapstore-client](https://github.com/Thuenen-GeoNode-Development/geonode-mapstore-client/compare/thuenen_4.3.x..GeoNode:4.3.1)
 * [GeoNode](https://github.com/Thuenen-GeoNode-Development/geonode/compare/thuenen_4.x..geonode:4.3.1)
 
