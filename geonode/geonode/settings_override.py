@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 
 # load the defaults settings
 from geonode.settings import *
-from geonode.settings import TEMPLATES, INSTALLED_APPS, IMPORTER_HANDLERS
+from geonode.settings import (
+    DEBUG,
+    TEMPLATES,
+    INSTALLED_APPS,
+    IMPORTER_HANDLERS,
+    LOCALE_PATHS,
+    PROJECT_ROOT,
+    AUTHENTICATION_BACKENDS,
+)
 
 
 SITENAME = os.getenv("SITENAME", "thuenen_atlas")
 X_FRAME_OPTIONS = "SAMEORIGIN"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None if DEBUG else "same-origin"
+# required for geonode-mapstore-client development
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8081"] if DEBUG else []
+
+
 STATIC_ROOT = "/mnt/volumes/statics/static/"
 MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
 
@@ -28,20 +42,21 @@ TEMPLATES[0].pop("APP_DIRS", None)
 
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d "
-            "%(thread)d %(message)s"
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
         },
         "simple": {
-            "format": "%(message)s",
+            "format": "{levelname} {message}",
+            "style": "{",
         },
     },
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "handlers": {
         "console": {
-            "level": "ERROR",
+            "level": "WARNING",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -52,9 +67,13 @@ LOGGING = {
         },
     },
     "loggers": {
+        "root": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
         "django": {
             "handlers": ["console"],
-            "level": "ERROR",
+            "level": "INFO",
         },
         "geonode": {
             "handlers": ["console"],
@@ -74,15 +93,15 @@ LOGGING = {
         },
         "celery": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
         "mapstore2_adapter.plugins.serializers": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
         "geonode_logstash.logstash": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
     },
 }
@@ -117,11 +136,9 @@ from django_auth_ldap import config as ldap_config
 
 # from geonode_ldap.config import GeonodeNestedGroupOfNamesType
 import ldap
+import ast
 
 LDAP_ENABLED = ast.literal_eval(os.getenv("LDAP_ENABLED", "False"))
-
-# enable logging
-import logging
 
 logger = logging.getLogger("django_auth_ldap")
 logger.addHandler(logging.StreamHandler())
