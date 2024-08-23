@@ -15,11 +15,13 @@ def _handle_single_item(menu_item):
         m_item['target'] = '_blank'
     return m_item
 
+
 def _is_mobile_device(context):
     if context and 'request' in context:
         req = context['request']
         return req.user_agent.is_mobile
     return False
+
 
 @register.simple_tag(takes_context=True)
 def get_base_left_topbar_menu(context):
@@ -91,7 +93,7 @@ def get_base_right_topbar_menu(context):
                     "label": "Developer"
                 },
                 {
-                "type": "divider"
+                    "type": "divider"
                 },
                 {
                     "type": "link",
@@ -154,7 +156,8 @@ def get_user_menu(context):
                 "label": "Register",
                 "type": "link",
                 "href": "/account/signup/?next=/"
-            } if settings.ACCOUNT_OPEN_SIGNUP and not Configuration.load().read_only else None,
+            } if settings.ACCOUNT_OPEN_SIGNUP
+            and not Configuration.load().read_only else None,
             {
                 "label": "Sign in",
                 "type": "link",
