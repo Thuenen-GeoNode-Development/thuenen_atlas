@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import ast
 import logging
 
 # load the defaults settings
@@ -19,7 +20,8 @@ SITENAME = os.getenv("SITENAME", "thuenen_atlas")
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None if DEBUG else "same-origin"
 # required for geonode-mapstore-client development
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8081"] if DEBUG else []
+CSRF_TRUSTED_ORIGINS = ["http://172.18.0.1:8001"] if DEBUG else []
+CORS_ALLOWED_ORIGINS = ast.literal_eval(os.getenv("CORS_ALLOWED_ORIGINS", "[]"))
 
 
 STATIC_ROOT = "/mnt/volumes/statics/static/"
