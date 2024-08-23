@@ -15,7 +15,7 @@ x-common-django:
   volumes:
     # configuration
     - ./geonode/geonode/settings_override.py:/usr/src/geonode/geonode/settings_override.py
-    - ./geonode/templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
+    - ./geonode/geonode/catalogue/templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
     - ./geonode/fixtures:/usr/src/geonode/fixtures
     # contrib apps
     - ./geonode/apps/atlas:/usr/src/geonode/atlas
