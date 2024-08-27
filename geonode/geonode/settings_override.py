@@ -4,8 +4,8 @@ import ast
 import logging
 
 # load the defaults settings
-from geonode.settings import *
-from geonode.settings import (
+from geonode.settings import *  # noqa
+from geonode.settings import (  # noqa
     DEBUG,
     TEMPLATES,
     INSTALLED_APPS,
@@ -19,12 +19,17 @@ from geonode.settings import (
 SITENAME = os.getenv("SITENAME", "thuenen_atlas")
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None if DEBUG else "same-origin"
-# required for geonode-mapstore-client development
+
+
+# relax origins for geonode-mapstore-client development
 CSRF_TRUSTED_ORIGINS = [
     "http://172.18.0.1:8001",
     "http://localhost:8081"
-] if DEBUG else []
-CORS_ALLOWED_ORIGINS = ast.literal_eval(os.getenv("CORS_ALLOWED_ORIGINS", "[]"))
+] if DEBUG else ast.literal_eval(os.getenv("CSRF_TRUSTED_ORIGINS", "[]")) # noqa
+CORS_ALLOWED_ORIGINS = [
+    "http://172.18.0.1:8001",
+    "http://localhost:8081"
+] if DEBUG else ast.literal_eval(os.getenv("CORS_ALLOWED_ORIGINS", "[]"))  # noqa
 
 
 STATIC_ROOT = "/mnt/volumes/statics/static/"
@@ -50,7 +55,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",  # noqa
             "style": "{",
         },
         "simple": {
@@ -58,7 +63,7 @@ LOGGING = {
             "style": "{",
         },
     },
-    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},  # noqa
     "handlers": {
         "console": {
             "level": "WARNING",
@@ -141,7 +146,6 @@ from django_auth_ldap import config as ldap_config
 
 # from geonode_ldap.config import GeonodeNestedGroupOfNamesType
 import ldap
-import ast
 
 LDAP_ENABLED = ast.literal_eval(os.getenv("LDAP_ENABLED", "False"))
 
@@ -149,7 +153,7 @@ logger = logging.getLogger("django_auth_ldap")
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
-# add both standard ModelBackend auth and django_auth_ldap.backend.LDAPBackend auth
+# add django_auth_ldap.backend.LDAPBackend auth to standard ModelBackend
 AUTHENTICATION_BACKENDS += ("django_auth_ldap.backend.LDAPBackend",)
 
 # django_auth_ldap configuration
