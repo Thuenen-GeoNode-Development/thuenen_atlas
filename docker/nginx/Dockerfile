@@ -1,5 +1,6 @@
 ARG BASE_IMAGE_VERSION
-FROM geonode/nginx:${BASE_IMAGE_VERSION}
+#FROM geonode/nginx:${BASE_IMAGE_VERSION}
+FROM geonode/nginx:1.25.3-v1
 
 COPY ./cert.pem /geonode-certificates/autoissued/fullchain.pem
 COPY ./key.pem /geonode-certificates/autoissued/privkey.pem
