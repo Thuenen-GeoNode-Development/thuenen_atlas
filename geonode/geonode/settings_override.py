@@ -8,8 +8,8 @@ from geonode.settings import TEMPLATES, INSTALLED_APPS, IMPORTER_HANDLERS
 
 SITENAME = os.getenv("SITENAME", "thuenen_atlas")
 X_FRAME_OPTIONS = "SAMEORIGIN"
-STATIC_ROOT = "/mnt/volumes/statics/static/"
-MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
+#STATIC_ROOT = "/mnt/volumes/statics/static/"
+#MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
 
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
