@@ -14,3 +14,26 @@ or ovewrite individual section templates like brand_navbar.html, footer.html etc
 6. Site name has to be *subsite_name* (just as the folder name). 
 7. Within the subsite settings, add a theme named *subsite_name*
 8. Subsite should be available at http://{host}/*subsite_name*/
+
+
+The full list of snippets that could be overridden is as following:
+brand_navbar.html
+custom_theme.html
+footer.html
+header.html
+hero.html
+language_selector.html
+loader_style.html
+loader.html
+menu_item.html
+search_bar.html
+topbar.html
+
+Their content could be examined at geonode/geonode-mapstore-client/geonode_mapstore_client/templates/geonode-mapstore-client/snippets
+
+
+There are some customizations that are possible directly from the admin panel at http://{host}/admin. For that, within the subsite settings,
+go to the settings of the theme, it will allow to 
+1. Change the main logo (Field Logo")
+2. Change the title of the page (Field "Jumbotron title")
+3. Chage the subtitle fo the page (Fied "Jumbotron content")

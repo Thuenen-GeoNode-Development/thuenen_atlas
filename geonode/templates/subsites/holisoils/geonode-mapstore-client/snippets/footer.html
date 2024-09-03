@@ -1,21 +1,51 @@
+{% load static %}
 
 
-<footer class="gn-footer">
-    <ul>
-        <li>
-            <a href="https://geonode.org/" class="nav-link">
-                <span>geonode.org</span>
-            </a>
-        </li>
-        <li>
-            <a href="/developer/" class="nav-link">
-                <span>Developers</span>
-            </a>
-        </li>
-        <li>
-            <a href="/about/" class="nav-link">
-                <span>About</span>
-            </a>
-        </li>
-    </ul>
+<footer class="gn-footer" style="padding: 20px 0; text-align: center;">
+    <div class="footer-content" style="max-width: 800px; margin: 0 auto;">
+        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: center;">
+            <li style="margin-bottom: 10px;">
+                <div class="footer-logo" style="margin-bottom: 20px;">
+                    <a href="/">
+                        <img src="geonode/geonode/templates/subsites/statics/holisoils_logo.png" alt="Holisoils Logo"
+                            style="max-height: 50px; width: auto;">
+                    </a>
+                </div>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <div class="footer-logo" style="margin-bottom: 20px;">
+                    <a href="/">
+                        <img src="{% static 'geonode/img/nfdi4biodivirsity_logo.png' %}" alt="nfdi4biodivirsity Logo"
+                            style="max-height: 50px; width: auto;">
+                    </a>
+                </div>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <div class="footer-logo" style="margin-bottom: 20px;">
+                    <a href="/">
+                        <img src="{% static 'geonode/img/Fairagro_Logo.png' %}" alt="Fairagro Logo"
+                            style="max-height: 50px; width: auto;">
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: center;">
+            <li style="margin-bottom: 10px;">
+                <a href="https://geonode.org/" class="nav-link" style="text-decoration: none; color: inherit;">
+                    <span>geonode.org</span>
+                </a>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <a href="/developer/" class="nav-link" style="text-decoration: none; color: inherit;">
+                    <span>Developers</span>
+                </a>
+            </li>
+            <li style="margin-bottom: 10px;">
+                <a href="/about/" class="nav-link" style="text-decoration: none; color: inherit;">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </footer>
