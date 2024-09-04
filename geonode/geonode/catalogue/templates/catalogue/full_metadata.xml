@@ -14,57 +14,58 @@
     <gmd:MD_ScopeCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
    </gmd:hierarchyLevel>
 
-   {% with layer.poc as poc %}
+   {% for label, contact_roles in layer.get_defined_multivalue_contact_roles.items %}
+   {% for contact_role in contact_roles %}
+   {% if label == 'pointOfContact' %}
    <gmd:contact>
      <gmd:CI_ResponsibleParty>
-       <gmd:individualName {% if not poc.name %}gco:nilReason="missing"{% endif %}>
-         {% if poc.name %} <gco:CharacterString>{{ poc.name }}</gco:CharacterString> {% endif %}
+      <gmd:individualName {% if not contact_role.first_name or not contact_role.last_name  %}gco:nilReason="missing">{% else %}>
+         <gco:CharacterString>{{ contact_role.first_name }} {{ contact_role.last_name}}</gco:CharacterString>{% endif %}
        </gmd:individualName>
-       <gmd:organisationName {% if not poc.organization %}gco:nilReason="missing"{% endif %}>
-         {% if poc.organization %} <gco:CharacterString>{{ poc.organization }}</gco:CharacterString> {% endif %}
+       <gmd:organisationName {% if not contact_role.organization %}gco:nilReason="missing"{% endif %}>
+         {% if contact_role.organization %} <gco:CharacterString>{{ contact_role.organization }}</gco:CharacterString> {% endif %}
        </gmd:organisationName>
-       <gmd:positionName {% if not poc.position %}gco:nilReason="missing"{%endif%}>
-         {% if poc.position %}<gco:CharacterString>{{ poc.position }}</gco:CharacterString> {% endif %}
+       <gmd:positionName {% if not contact_role.position %}gco:nilReason="missing"{%endif%}>
+         {% if contact_role.position %}<gco:CharacterString>{{ contact_role.position }}</gco:CharacterString> {% endif %}
        </gmd:positionName>
        <gmd:contactInfo>
          <gmd:CI_Contact>
            <gmd:phone>
              <gmd:CI_Telephone>
-               <gmd:voice {% if not poc.voice %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.voice %}<gco:CharacterString>{{ poc.voice }}</gco:CharacterString>{% endif %}
+               <gmd:voice {% if not contact_role.voice %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.voice %}<gco:CharacterString>{{ contact_role.voice }}</gco:CharacterString>{% endif %}
                </gmd:voice>
-               <gmd:facsimile {% if not poc.fax %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.fax %}<gco:CharacterString>{{ poc.fax }}</gco:CharacterString> {%endif %}
+               <gmd:facsimile {% if not contact_role.fax %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.fax %}<gco:CharacterString>{{ contact_role.fax }}</gco:CharacterString> {%endif %}
                </gmd:facsimile>
              </gmd:CI_Telephone>
            </gmd:phone>
            <gmd:address>
              <gmd:CI_Address>
-               <gmd:deliveryPoint {% if not poc.delivery %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.delivery %}<gco:CharacterString>{{ poc.delivery }}</gco:CharacterString>{% endif %}
+               <gmd:deliveryPoint {% if not contact_role.delivery %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.delivery %}<gco:CharacterString>{{ contact_role.delivery }}</gco:CharacterString>{% endif %}
                </gmd:deliveryPoint>
-               <gmd:city {% if not poc.city %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.city %}<gco:CharacterString>{{ poc.city }}</gco:CharacterString>{% endif %}
+               <gmd:city {% if not contact_role.city %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.city %}<gco:CharacterString>{{ contact_role.city }}</gco:CharacterString>{% endif %}
                </gmd:city>
-               <gmd:administrativeArea {%if not poc.area %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.area %}<gco:CharacterString>{{ poc.area }}</gco:CharacterString>{% endif %}
+               <gmd:administrativeArea {%if not contact_role.area %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.area %}<gco:CharacterString>{{ contact_role.area }}</gco:CharacterString>{% endif %}
                </gmd:administrativeArea>
-               <gmd:postalCode {%if not poc.zipcode %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.zipcode %}<gco:CharacterString>{{ poc.zipcode }}</gco:CharacterString>{% endif %}
+               <gmd:postalCode {%if not contact_role.zipcode %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.zipcode %}<gco:CharacterString>{{ contact_role.zipcode }}</gco:CharacterString>{% endif %}
                </gmd:postalCode>
-               <gmd:country {% if not poc.country %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.country %}<gco:CharacterString>{{ poc.country }}</gco:CharacterString>{% endif %}
+               <gmd:country {% if not contact_role.country %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.country %}<gco:CharacterString>{{ contact_role.country }}</gco:CharacterString>{% endif %}
                </gmd:country>
-               <gmd:electronicMailAddress {% if not poc.email %}gco:nilReason="missing"{% endif %}>
-                 {% if poc.email %}<gco:CharacterString>{{ poc.email }}</gco:CharacterString>{% endif %}
+               <gmd:electronicMailAddress {% if not contact_role.email %}gco:nilReason="missing"{% endif %}>
+                 {% if contact_role.email %}<gco:CharacterString>{{ contact_role.email }}</gco:CharacterString>{% endif %}
                </gmd:electronicMailAddress>
              </gmd:CI_Address>
            </gmd:address>
-           {% if poc.user %}
            <gmd:onlineResource>
                 <gmd:CI_OnlineResource>
                     <gmd:linkage>
-                        <gmd:URL>{{ SITEURL }}{{ layer.poc.get_absolute_url }}</gmd:URL>
+                        <gmd:URL>{{ SITEURL }}{{ contact_role.get_absolute_url }}</gmd:URL>
                     </gmd:linkage>
                     <gmd:protocol>
                         <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
@@ -74,15 +75,16 @@
                     </gmd:description>
                 </gmd:CI_OnlineResource>
            </gmd:onlineResource>
-           {% endif %}
          </gmd:CI_Contact>
        </gmd:contactInfo>
        <gmd:role>
-         <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
+         <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="{{ label }}">{{ label }}</gmd:CI_RoleCode>
        </gmd:role>
      </gmd:CI_ResponsibleParty>
    </gmd:contact>
-   {% endwith %}
+   {% endif %}
+   {% endfor %}
+   {% endfor %}
 
    <gmd:dateStamp>
      <gco:DateTime>{{layer.csw_insert_date|date:"Y-m-d\TH:i:s\Z"}}</gco:DateTime>
@@ -161,57 +163,59 @@
          <gmd:MD_ProgressCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed">completed</gmd:MD_ProgressCode>
        </gmd:status>
 
-       {% with layer.owner as owner %}
+       {% for label, contact_roles in layer.get_defined_multivalue_contact_roles.items %}
+       {% for contact_role in contact_roles %}
+       {% if label != 'pointOfContact' %}
        <gmd:pointOfContact>
          <gmd:CI_ResponsibleParty>
-           <gmd:individualName {% if not owner.name %}gco:nilReason="missing"{% endif %}>
-             {% if owner.name %} <gco:CharacterString>{{ owner.name }}</gco:CharacterString> {% endif %}
+           <gmd:individualName {% if not contact_role.name %}gco:nilReason="missing"{% endif %}>
+             {% if contact_role.name %} <gco:CharacterString>{{ contact_role.name }}</gco:CharacterString> {% endif %}
            </gmd:individualName>
-           <gmd:organisationName {% if not owner.organization %}gco:nilReason="missing"{% endif %}>
-             {% if owner.organization %} <gco:CharacterString>{{ owner.organization }}</gco:CharacterString> {% endif %}
+           <gmd:organisationName {% if not contact_role.organization %}gco:nilReason="missing"{% endif %}>
+             {% if contact_role.organization %} <gco:CharacterString>{{ contact_role.organization }}</gco:CharacterString> {% endif %}
            </gmd:organisationName>
-           <gmd:positionName {% if not owner.position %}gco:nilReason="missing"{%endif%}>
-             {% if owner.position %}<gco:CharacterString>{{ owner.position }}</gco:CharacterString> {% endif %}
+           <gmd:positionName {% if not contact_role.position %}gco:nilReason="missing"{%endif%}>
+             {% if contact_role.position %}<gco:CharacterString>{{ contact_role.position }}</gco:CharacterString> {% endif %}
            </gmd:positionName>
            <gmd:contactInfo>
              <gmd:CI_Contact>
                <gmd:phone>
                  <gmd:CI_Telephone>
-                   <gmd:voice {% if not owner.voice %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.voice %}<gco:CharacterString>{{ owner.voice }}</gco:CharacterString>{% endif %}
+                   <gmd:voice {% if not contact_role.voice %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.voice %}<gco:CharacterString>{{ contact_role.voice }}</gco:CharacterString>{% endif %}
                    </gmd:voice>
-                   <gmd:facsimile {% if not owner.fax %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.fax %}<gco:CharacterString>{{ owner.fax }}</gco:CharacterString> {%endif %}
+                   <gmd:facsimile {% if not contact_role.fax %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.fax %}<gco:CharacterString>{{ contact_role.fax }}</gco:CharacterString> {%endif %}
                    </gmd:facsimile>
                  </gmd:CI_Telephone>
                </gmd:phone>
                <gmd:address>
                  <gmd:CI_Address>
-                   <gmd:deliveryPoint {% if not owner.delivery %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.delivery %}<gco:CharacterString>{{ owner.delivery }}</gco:CharacterString>{% endif %}
+                   <gmd:deliveryPoint {% if not contact_role.delivery %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.delivery %}<gco:CharacterString>{{ contact_role.delivery }}</gco:CharacterString>{% endif %}
                    </gmd:deliveryPoint>
-                   <gmd:city {% if not owner.city %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.city %}<gco:CharacterString>{{ owner.city }}</gco:CharacterString>{% endif %}
+                   <gmd:city {% if not contact_role.city %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.city %}<gco:CharacterString>{{ contact_role.city }}</gco:CharacterString>{% endif %}
                    </gmd:city>
-                   <gmd:administrativeArea {%if not owner.area %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.area %}<gco:CharacterString>{{ owner.area }}</gco:CharacterString>{% endif %}
+                   <gmd:administrativeArea {%if not contact_role.area %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.area %}<gco:CharacterString>{{ contact_role.area }}</gco:CharacterString>{% endif %}
                    </gmd:administrativeArea>
-                   <gmd:postalCode {%if not owner.zipcode %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.zipcode %}<gco:CharacterString>{{ owner.zipcode }}</gco:CharacterString>{% endif %}
+                   <gmd:postalCode {%if not contact_role.zipcode %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.zipcode %}<gco:CharacterString>{{ contact_role.zipcode }}</gco:CharacterString>{% endif %}
                    </gmd:postalCode>
-                   <gmd:country {% if not owner.country %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.country %}<gco:CharacterString>{{ owner.country }}</gco:CharacterString>{% endif %}
+                   <gmd:country {% if not contact_role.country %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.country %}<gco:CharacterString>{{ contact_role.country }}</gco:CharacterString>{% endif %}
                    </gmd:country>
-                   <gmd:electronicMailAddress {% if not owner.email %}gco:nilReason="missing"{% endif %}>
-                     {% if owner.email %}<gco:CharacterString>{{ owner.email }}</gco:CharacterString>{% endif %}
+                   <gmd:electronicMailAddress {% if not contact_role.email %}gco:nilReason="missing"{% endif %}>
+                     {% if contact_role.email %}<gco:CharacterString>{{ contact_role.email }}</gco:CharacterString>{% endif %}
                    </gmd:electronicMailAddress>
                  </gmd:CI_Address>
                </gmd:address>
-               {% if owner.user %}
+               {% if contact_role.user %}
                <gmd:onlineResource>
                     <gmd:CI_OnlineResource>
                         <gmd:linkage>
-                            <gmd:URL>{{ SITEURL }}{{ layer.owner.get_absolute_url }}</gmd:URL>
+                            <gmd:URL>{{ SITEURL }}{{ layer.contact_role.get_absolute_url }}</gmd:URL>
                         </gmd:linkage>
                         <gmd:protocol>
                             <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
@@ -225,80 +229,13 @@
              </gmd:CI_Contact>
            </gmd:contactInfo>
            <gmd:role>
-             <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator">originator</gmd:CI_RoleCode>
+             <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="{{ label }}">{{ label }}</gmd:CI_RoleCode>
            </gmd:role>
          </gmd:CI_ResponsibleParty>
        </gmd:pointOfContact>
-       {% endwith %}
-       {% with layer.metadata_author as metadata_author %}
-       <gmd:pointOfContact>
-         <gmd:CI_ResponsibleParty>
-           <gmd:individualName {% if not metadata_author.name %}gco:nilReason="missing"{% endif %}>
-             {% if metadata_author.name %} <gco:CharacterString>{{ metadata_author.name }}</gco:CharacterString> {% endif %}
-           </gmd:individualName>
-           <gmd:organisationName {% if not metadata_author.organization %}gco:nilReason="missing"{% endif %}>
-             {% if metadata_author.organization %} <gco:CharacterString>{{ metadata_author.organization }}</gco:CharacterString> {% endif %}
-           </gmd:organisationName>
-           <gmd:positionName {% if not metadata_author.position %}gco:nilReason="missing"{%endif%}>
-             {% if metadata_author.position %}<gco:CharacterString>{{ metadata_author.position }}</gco:CharacterString> {% endif %}
-           </gmd:positionName>
-           <gmd:contactInfo>
-             <gmd:CI_Contact>
-               <gmd:phone>
-                 <gmd:CI_Telephone>
-                   <gmd:voice {% if not metadata_author.voice %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.voice %}<gco:CharacterString>{{ metadata_author.voice }}</gco:CharacterString>{% endif %}
-                   </gmd:voice>
-                   <gmd:facsimile {% if not metadata_author.fax %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.fax %}<gco:CharacterString>{{ metadata_author.fax }}</gco:CharacterString> {%endif %}
-                   </gmd:facsimile>
-                 </gmd:CI_Telephone>
-               </gmd:phone>
-               <gmd:address>
-                 <gmd:CI_Address>
-                   <gmd:deliveryPoint {% if not metadata_author.delivery %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.delivery %}<gco:CharacterString>{{ metadata_author.delivery }}</gco:CharacterString>{% endif %}
-                   </gmd:deliveryPoint>
-                   <gmd:city {% if not metadata_author.city %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.city %}<gco:CharacterString>{{ metadata_author.city }}</gco:CharacterString>{% endif %}
-                   </gmd:city>
-                   <gmd:administrativeArea {%if not metadata_author.area %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.area %}<gco:CharacterString>{{ metadata_author.area }}</gco:CharacterString>{% endif %}
-                   </gmd:administrativeArea>
-                   <gmd:postalCode {%if not metadata_author.zipcode %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.zipcode %}<gco:CharacterString>{{ metadata_author.zipcode }}</gco:CharacterString>{% endif %}
-                   </gmd:postalCode>
-                   <gmd:country {% if not metadata_author.country %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.country %}<gco:CharacterString>{{ metadata_author.country }}</gco:CharacterString>{% endif %}
-                   </gmd:country>
-                   <gmd:electronicMailAddress {% if not metadata_author.email %}gco:nilReason="missing"{% endif %}>
-                     {% if metadata_author.email %}<gco:CharacterString>{{ metadata_author.email }}</gco:CharacterString>{% endif %}
-                   </gmd:electronicMailAddress>
-                 </gmd:CI_Address>
-               </gmd:address>
-               {% if metadata_author.user %}
-               <gmd:onlineResource>
-                     <gmd:CI_OnlineResource>
-                         <gmd:linkage>
-                             <gmd:URL>{{ SITEURL }}{{ layer.metadata_author.get_absolute_url }}</gmd:URL>
-                         </gmd:linkage>
-                         <gmd:protocol>
-                             <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-                         </gmd:protocol>
-                         <gmd:description>
-                             <gco:CharacterString>GeoNode profile page</gco:CharacterString>
-                         </gmd:description>
-                     </gmd:CI_OnlineResource>
-               </gmd:onlineResource>
-               {% endif %}
-             </gmd:CI_Contact>
-           </gmd:contactInfo>
-           <gmd:role>
-             <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="author">author</gmd:CI_RoleCode>
-           </gmd:role>
-         </gmd:CI_ResponsibleParty>
-       </gmd:pointOfContact>
-       {% endwith %}
+       {% endif %}
+       {% endfor %}
+       {% endfor %}
 
        {% if layer.maintenance_frequency %}
        <gmd:resourceMaintenance>
