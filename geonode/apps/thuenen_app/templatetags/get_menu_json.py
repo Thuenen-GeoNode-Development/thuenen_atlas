@@ -23,43 +23,40 @@ def _is_mobile_device(context):
     return False
 
 
-@register.simple_tag(takes_context=True)
-def get_base_left_topbar_menu(context):
-
-    is_mobile = _is_mobile_device(context)
+@register.simple_tag
+def get_base_left_topbar_menu():
 
     return [
         {
-            "label": "Data",
-            "type": "dropdown",
-            "items": [
-                {
-                    "type": "link",
-                    "href": "/catalogue/#/search/?f=dataset",
-                    "label": "Datasets"
-                },
-                {
-                    "type": "link",
-                    "href": "/catalogue/#/search/?f=document",
-                    "label": "Documents"
-                } if not is_mobile else None
-            ]
+            "type": "link",
+            "href": "/catalogue/#/all",
+            "label": "All resources",
         },
         {
             "type": "link",
-            "href": "/catalogue/#/search/?f=map",
+            "href": "/catalogue/#/datasets",
+            "label": "Datasets",
+        },
+        {
+            "type": "link", 
+            "href": "/catalogue/#/maps",
             "label": "Maps"
+        },
+        {
+            "type": "link",
+            "href": "/catalogue/#/documents",
+            "label": "Documents",
         },
         # {
         #     "type": "link",
-        #     "href": "/catalogue/#/search/?f=geostory",
-        #     "label": "GeoStories"
+        #     "href": "/catalogue/#/geostories",
+        #     "label": "GeoStories",
         # },
         # {
         #     "type": "link",
-        #     "href": "/catalogue/#/search/?f=dashboard",
-        #     "label": "Dashboards"
-        # },
+        #     "href": "/catalogue/#/dashboards",
+        #     "label": "Dashboards",
+        # }
         {
             "type": "link",
             "href": "/atlanten",
