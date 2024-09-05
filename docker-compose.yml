@@ -22,6 +22,7 @@ x-common-django:
     - ./geonode/apps/thuenen_app:/usr/src/geonode/thuenen_app
     - ./geonode/apps/externalapplications/externalapplications:/usr/src/geonode/externalapplications
     # volumes
+    - /mnt/atlas_data/bind_mounts/webspaces:/mnt/volumes/webspace
     - statics:/mnt/volumes/statics
     - geoserver-data-dir:/geoserver_data/data
     - backup-restore:/backup_restore
@@ -87,6 +88,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - /mnt/atlas_data/bind_mounts/webspaces:/mnt/volumes/webspace
       - statics:/mnt/volumes/statics
       # Certificates
       #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem

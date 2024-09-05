@@ -20,6 +20,11 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
 
+    # webspace
+    location /webspace/ {
+        alias /mnt/volumes/webspace/;
+    }
+
     include sites-enabled/*.conf;
 }
 
