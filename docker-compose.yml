@@ -89,10 +89,8 @@ services:
     volumes:
       - statics:/mnt/volumes/statics
       # Certificates
-      #- <path-to-cert>.pem:/geonode-certificates/autoissued/fullchain.pem
-      #- <path-to-key>.pem:/geonode-certificates/autoissued/privkey.pem
-      - /etc/ssl/certs/atlas-dev_thuenen_de.pem:/geonode-certificates/autoissued/fullchain.pem
-      - /etc/ssl/private/atlas-dev.thuenen.de.key:/geonode-certificates/autoissued/privkey.pem
+      - /etc/ssl/certs/fullchain.pem:/geonode-certificates/autoissued/fullchain.pem
+      - /etc/ssl/private/privkey.pem:/geonode-certificates/autoissued/privkey.pem
 
     restart: on-failure
     networks:
