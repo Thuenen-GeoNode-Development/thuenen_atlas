@@ -1,4 +1,4 @@
--e git+https://github.com/GeoNodeUserGroup-DE/importer-datapackage.git@main#egg=importer_datapackage
+-e git+https://github.com/GeoNodeUserGroup-DE/contrib_datapackage.git@main#egg=importer-datapackage
 #-e git+https://github.com/geosolutions-it/geonode-subsites#egg=geonode-subsites
--e git+https://github.com/ridoo/geonode-subsites@fix/removed_template_tag_parameter#egg=geonode-subsites
+-e git+https://github.com/ridoo/geonode-subsites@align-with-v4.3.x#egg=geonode-subsites
 django-auth-ldap==4.6.0
