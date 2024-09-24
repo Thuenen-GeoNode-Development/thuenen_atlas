@@ -61,4 +61,15 @@ go to the settings of the theme, it will allow to
 
 4. Add custom styling (Field "Custom CSS rules")
 
+This field is overiding ```geonode/templates/subsites/subsite_name/geonode-mapstore-client/snippets/custom_theme.html```
+
+In order for those styles to take effect, ```custom_theme.html``` should end with the following:
+```
+<style>
+  {{ custom_theme.extra_css }}
+</style>
+```
+
+Then you can use the admin panel to update styles like this:
+
 <img src="statics/css.png" alt="css field img" width="50%">
