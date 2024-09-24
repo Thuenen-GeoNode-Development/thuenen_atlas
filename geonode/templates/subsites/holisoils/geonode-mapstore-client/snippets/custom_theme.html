@@ -1,10 +1,11 @@
+
+{% block content %}
 <style>
   /* 
      * Custom Theming
      * https://geonode.org/geonode-mapstore-client/master/tutorial-theme.html 
      */
-
-  .msgapi .gn-theme {
+     :root {
     --gn-font-family-sans-serif: 'Montserrat', sans-serif;
     --gn-font-family-serif: Georgia, 'Times New Roman', Times, serif;
     --gn-font-family-monospace: Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -201,3 +202,9 @@
     --gn-button-tray-badge-bg: #1a1a1a;
   }
 </style>
+
+<style>
+  {{ custom_theme.extra_css }}
+</style>
+
+{% endblock %}
