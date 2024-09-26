@@ -117,6 +117,7 @@ services:
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
+      - /mnt/atlas_data/bind_mounts/geoserver_ingest:/geoserver_ingest
       - backup-restore:/backup_restore
       - data:/data
       - tmp:/tmp
