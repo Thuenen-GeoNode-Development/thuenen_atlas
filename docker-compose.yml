@@ -9,7 +9,7 @@ x-common-django:
     dockerfile: Dockerfile
     args:
       - BASE_IMAGE_VERSION=${GEONODE_BASE_IMAGE_VERSION}
-  restart: no
+  restart: unless-stopped
   env_file:
     - .env
   volumes:
@@ -94,7 +94,7 @@ services:
       - /etc/ssl/certs/fullchain.pem:/geonode-certificates/autoissued/fullchain.pem
       - /etc/ssl/private/privkey.pem:/geonode-certificates/autoissued/privkey.pem
 
-    restart: on-failure
+    restart: unless-stopped
     networks:
       thuenen_network:
         ipv4_address: 172.18.0.100
@@ -139,7 +139,7 @@ services:
     entrypoint: sleep infinity
     volumes:
       - geoserver-data-dir:/geoserver_data/data
-    restart: unless-stopped
+    restart: no
     healthcheck:
       test: "ls -A '/geoserver_data/data' | wc -l"
     networks:
