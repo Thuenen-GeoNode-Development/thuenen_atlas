@@ -1,5 +1,6 @@
 {% load thesaurus %}
 {% load l10n %}
+{% load gdi_de_custom_roles %}
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
    <gmd:fileIdentifier>
      <gco:CharacterString>{{layer.uuid}}</gco:CharacterString>
@@ -78,7 +79,7 @@
          </gmd:CI_Contact>
        </gmd:contactInfo>
        <gmd:role>
-         <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="{{ label }}">{{ label }}</gmd:CI_RoleCode>
+         <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
        </gmd:role>
      </gmd:CI_ResponsibleParty>
    </gmd:contact>
@@ -229,7 +230,7 @@
              </gmd:CI_Contact>
            </gmd:contactInfo>
            <gmd:role>
-             <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="{{ label }}">{{ label }}</gmd:CI_RoleCode>
+             <gmd:CI_RoleCode codeSpace="ISOTC211/19115" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="{{ label|get_gdi_compliant_role_label }}">{{ label|get_gdi_compliant_role_label }}</gmd:CI_RoleCode>
            </gmd:role>
          </gmd:CI_ResponsibleParty>
        </gmd:pointOfContact>
