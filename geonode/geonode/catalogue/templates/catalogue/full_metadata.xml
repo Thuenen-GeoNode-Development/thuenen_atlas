@@ -17,7 +17,7 @@
 
    {% for label, contact_roles in layer.get_defined_multivalue_contact_roles.items %}
    {% for contact_role in contact_roles %}
-   {% if label == 'pointOfContact' %}
+   {% if label|get_gdi_compliant_role_label == 'pointOfContact' %}
    <gmd:contact>
      <gmd:CI_ResponsibleParty>
       <gmd:individualName {% if not contact_role.first_name or not contact_role.last_name  %}gco:nilReason="missing">{% else %}>
@@ -166,7 +166,7 @@
 
        {% for label, contact_roles in layer.get_defined_multivalue_contact_roles.items %}
        {% for contact_role in contact_roles %}
-       {% if label != 'pointOfContact' %}
+       {% if label|get_gdi_compliant_role_label != 'pointOfContact' %}
        <gmd:pointOfContact>
          <gmd:CI_ResponsibleParty>
            <gmd:individualName {% if not contact_role.name %}gco:nilReason="missing"{% endif %}>

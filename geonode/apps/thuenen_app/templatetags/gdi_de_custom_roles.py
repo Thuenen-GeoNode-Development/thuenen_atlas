@@ -4,6 +4,7 @@ register = template.Library()
 
 GDI_DE_ROLE_LABEL_MAPPING = {
     'Owner': 'owner',
+    'Point of Contact': 'pointOfContact',
     'Metadata Author': 'author',
     'Processor': 'processor',
     'Publisher': 'publisher',
