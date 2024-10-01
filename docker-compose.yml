@@ -1,6 +1,5 @@
 # Common Django template for GeoNode and Celery services below
-x-common-django:
-  &default-common-django
+x-common-django: &default-common-django
   image: ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}${COMPOSE_PROJECT_NAME}_django:${GEONODE_BASE_IMAGE_VERSION}-${PROJECT_VERSION}
   build:
     context: ./docker/geonode
@@ -14,6 +13,8 @@ x-common-django:
     # configuration
     - ./geonode/geonode/settings_override.py:/usr/src/geonode/geonode/settings_override.py
     - ./geonode/geonode/catalogue/templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
+    - ./geonode/templates/subsites:/usr/src/geonode/geonode/templates/subsites
+    - ./geonode/templates/subsites/statics/:/usr/src/geonode/geonode/static/subsites
     - ./geonode/fixtures:/usr/src/geonode/fixtures
     # contrib apps
     - ./geonode/apps/atlas:/usr/src/geonode/atlas
@@ -35,10 +36,12 @@ services:
 
   # Our custom django application. It includes Geonode.
   django:
-    << : *default-common-django
+    <<: *default-common-django
     container_name: django4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8000/"
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}
+
+        ' --output /dev/null http://127.0.0.1:8000/"
       start_period: 60s
       interval: 60s
       timeout: 10s
@@ -48,12 +51,12 @@ services:
       - IS_CELERY=False
     networks:
       - thuenen_network
-    entrypoint: ["/usr/src/geonode/entrypoint.sh"]
+    entrypoint: [ "/usr/src/geonode/entrypoint.sh" ]
     command: "uwsgi --ini /usr/src/geonode/uwsgi.ini"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
-    << : *default-common-django
+    <<: *default-common-django
     container_name: celery4${COMPOSE_PROJECT_NAME}
     depends_on:
       - django
@@ -62,7 +65,7 @@ services:
       - IS_CELERY=True
     networks:
       - thuenen_network
-    entrypoint: ["/usr/src/geonode/entrypoint.sh"]
+    entrypoint: [ "/usr/src/geonode/entrypoint.sh" ]
     command: "celery-cmd"
 
   # Nginx is serving django static and media files and proxies to django and geonode
@@ -104,7 +107,9 @@ services:
     container_name: geoserver4${COMPOSE_PROJECT_NAME}
     env_file: ./.env
     healthcheck:
-      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8080/geoserver/ows"
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}
+
+        ' --output /dev/null http://127.0.0.1:8080/geoserver/ows"
       start_period: 60s
       interval: 60s
       timeout: 10s

@@ -4,12 +4,10 @@ services:
       - .devcontainer/.env.local
     restart: "no"
     volumes:
-      #- ./.devcontainer/docker/geonode/custom_entrypoint.sh:/usr/src/geonode/custom_entrypoint.sh
       - ./.devcontainer/_gitignore:/usr/src/geonode/.gitignore
       - ./.devcontainer/_vscode:/usr/src/geonode/.vscode
     ports:
       - "8001:8001"
-    #command: /usr/src/geonode/custom_entrypoint.sh
     command: sleep infinity
 
   celery:
