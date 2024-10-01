@@ -1,3 +1,6 @@
+{% extends "geonode-mapstore-client/snippets/custom_theme.html" %}
+
+{% block content %}
 <style>
 
     /* 
@@ -204,76 +207,5 @@
         --gn-button-tray-badge-bg: #1a1a1a;
     }
 
-    /* Break long lines in the TOC */
-
-    #mapstore-drawermenu {
-
-        .mapstore-toc {
-
-            .toc-default-layer-head {
-                display: flex;
-                .toc-title {
-                    flex: 1;
-                    min-width: auto;
-                    max-width: none;
-                    width: auto;
-                    &:hover {
-                        font-weight: inherit;
-                    }
-                }
-            }
-            .toc-default-group-head {
-                display: flex;
-                > div {
-                    flex: 1;
-                    display: flex;
-                    max-width: calc(100% - 40px);
-                    .toc-group-title {
-                        flex: 1;
-                        min-width: auto;
-                        max-width: none;
-                        width: auto;
-                        &:hover {
-                            font-weight: inherit;
-                        }
-                    }
-                }
-            }
-
-            // display title on multiple lines
-            .toc-default-layer-head {
-                min-height: 40px;
-                height: auto;
-                .toc-title {
-
-                    word-break: normal;
-                    overflow-wrap: anywhere;
-                    hyphens: auto;
-
-                    overflow: visible;
-                    white-space: inherit;
-                    height: auto;
-                }
-                
-            }
-            .toc-default-group-head {
-                min-height: 40px;
-                height: auto;
-                > div {
-                    .toc-group-title {
-
-                        word-break: normal;
-                        overflow-wrap: anywhere;
-                        hyphens: auto;
-
-                        overflow: visible;
-                        white-space: inherit;
-                        height: auto;
-                    }
-                }
-            }
-        }
-    }
-
-
 </style>
+{% endblock %}
