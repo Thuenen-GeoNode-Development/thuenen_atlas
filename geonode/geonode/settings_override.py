@@ -102,7 +102,7 @@ LOGGING = {
         },
         "geonode": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
         "geoserver-restconfig.catalog": {
             "handlers": ["console"],
