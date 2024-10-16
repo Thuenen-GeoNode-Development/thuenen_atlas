@@ -1,6 +1,7 @@
 {% load thesaurus %}
 {% load l10n %}
 {% load gdi_de_custom_roles %}
+{% load link_set_urls %}
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
    <gmd:fileIdentifier>
      <gco:CharacterString>{{layer.uuid}}</gco:CharacterString>
@@ -140,11 +141,11 @@
            <gmd:edition {% if not layer.edition %}gco:nilReason="missing"{% endif %}>
                  {% if layer.edition %}<gco:CharacterString>{{layer.edition}}</gco:CharacterString>{% endif %}
            </gmd:edition>
-           {% if layer.doi %}
+           {% if layer.link_set.metadata|get_iso_metadata_url %}
            <gmd:identifier>
              <gmd:MD_Identifier>
                <gmd:code>
-                 <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://dx.doi.org/{{ layer.doi }}" xlink:title="DOI">doi:{{ layer.doi }}</gmx:Anchor>
+                 <gmx:Anchor xlink:actuate="onRequest" xlink:href="{{ layer.link_set.metadata|get_iso_metadata_url }}" xlink:title="ISO">{{ layer.uuid }}</gmx:Anchor>
                </gmd:code>
              </gmd:MD_Identifier>
            </gmd:identifier>
@@ -514,6 +515,23 @@
        <gmd:lineage>
          <gmd:LI_Lineage>
            <gmd:statement {% if not layer.raw_data_quality_statement %}gco:nilReason="missing"/>{% else %}><gco:CharacterString>{{layer.raw_data_quality_statement}}</gco:CharacterString></gmd:statement>{% endif %}
+           {% if layer.doi %}
+           <gmd:source>
+             <gmd:LI_source>
+               <gmd:sourceCitation>
+                 <gmd:CI_Citation>
+                   <gmd:identifier>
+                     <gmd:MD_Identifier>
+                       <gmd:code>
+                         <gmx:Anchor xlink:actuate="onRequest" xlink:href="https://doi.org/{{ layer.doi }}" xlink:title="DOI">doi:{{ layer.doi }}</gmx:Anchor>
+                       </gmd:code>
+                     </gmd:MD_Identifier>
+                    </gmd:identifier>
+                  </gmd:CI_Citation>
+               </gmd:sourceCitation>
+             </gmd:LI_source>
+           </gmd:source>
+           {% endif %}
          </gmd:LI_Lineage>
        </gmd:lineage>
      </gmd:DQ_DataQuality>
