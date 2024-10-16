@@ -1,5 +1,7 @@
 {% load i18n %}
-<footer class="gn-footer">
+<footer class="gn-footer" style="display: block;">
+    {% block footer_links %}
+    <div style="display:flex;">
         <ul>
             <li>
                 <a href="{% url "developer" %}" class="nav-link">
@@ -22,4 +24,8 @@
                 </a>
             </li>
         </ul>
+    </div>
+    {% endblock %}
+    {% block funding_info %}
+    {% endblock %}
 </footer>

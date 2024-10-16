@@ -13,8 +13,8 @@ x-common-django: &default-common-django
     # configuration
     - ./geonode/geonode/settings_override.py:/usr/src/geonode/geonode/settings_override.py
     - ./geonode/geonode/catalogue/templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
-    - ./geonode/templates/subsites:/usr/src/geonode/geonode/templates/subsites
-    - ./geonode/templates/subsites/statics/:/usr/src/geonode/geonode/static/subsites
+    - ./geonode/geonode/templates/subsites:/usr/src/geonode/geonode/templates/subsites
+    - ./geonode/geonode/templates/subsites/statics/:/usr/src/geonode/geonode/static/subsites
     - ./geonode/fixtures:/usr/src/geonode/fixtures
     # contrib apps
     - ./geonode/apps/atlas:/usr/src/geonode/atlas

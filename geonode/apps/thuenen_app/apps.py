@@ -13,7 +13,6 @@ def run_setup_hooks(*args, **kwargs):
     settings.TEMPLATES[0]["DIRS"].insert(0, template_dir)
 
     urlpatterns += [
-        re_path(r"", include("subsites.urls")),
         re_path(
             r"^legal_notice/$",
             TemplateView.as_view(template_name="legal-notice.html"),
@@ -29,6 +28,7 @@ def run_setup_hooks(*args, **kwargs):
             TemplateView.as_view(template_name="privacy-cookies.html"),
             name="privacy-cookies",
         ),
+        re_path(r"", include("subsites.urls")),
     ]
 
 
