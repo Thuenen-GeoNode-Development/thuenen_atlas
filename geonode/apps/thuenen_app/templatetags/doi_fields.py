@@ -38,6 +38,6 @@ def get_doi_title_and_date(doi_value):
         return {"title": "No title", "date": "No date"} 
 
 def extract_doi(url):
-    pattern = r'10\.\d{4}/[A-Za-z0-9.]+'
+    pattern = r'10\.(.*)'
     match = re.search(pattern, url)
     return match.group(0) if match else None
