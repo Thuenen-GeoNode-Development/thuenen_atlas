@@ -525,6 +525,7 @@
                    <gmd:title>
                      <gco:CharacterString>{{ doi_data.title }}</gco:CharacterString>
                    </gmd:title>
+                   {% if doi_data.date %}
                    <gmd:date>
                     <gmd:CI_Date>
                       <gmd:date>
@@ -535,6 +536,7 @@
                       </gmd:dateType>
                     </gmd:CI_Date>
                    </gmd:date>
+                   {% endif %}
                    <gmd:identifier>
                      <gmd:MD_Identifier>
                        <gmd:code>
