@@ -1,8 +1,30 @@
 {% extends "geonode-mapstore-client/snippets/custom_theme.html" %}
 
+{% load static %}
+
 {% block content %}
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Regular.woff2' %}") format('woff2');
+      font-weight: 400;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Bold.woff2' %}") format('woff2');
+      font-weight: 700;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Italic.woff2' %}") format('woff2');
+      font-weight: 400;
+      font-style: italic;
+  }
+</style>
+
 
 <style>
   /* 
