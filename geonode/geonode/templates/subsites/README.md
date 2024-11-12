@@ -1,6 +1,7 @@
 This document provides instructions on adding a subsite and working with it for UI customization.
 
-For documentation on the subsites module see: https://github.com/geosolutions-it/geonode-subsites
+For documentation on the subsites module see: https://github.com/geosolutions-it/geonode-subsites and https://docs.geonode.org/en/4.2.5/advanced/contrib/subsites/index.html
+
 For detailed information on geonode theming see: https://docs.geonode.org/en/master/basic/theme/index.html
 
 # Adding a New Subsite
