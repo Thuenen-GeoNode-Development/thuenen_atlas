@@ -1,0 +1,15 @@
+{% extends "geonode-mapstore-client/snippets/brand_navbar.html" %}
+
+{% block left_menu %}
+<ul class="gn-menu-list">
+    <li title="Subsite Homepage">
+        <a href="/holisoils">
+            {% if custom_theme.logo and custom_theme.logo.url %}
+                <img src="{{ custom_theme.logo.url }}">
+            {% else %}
+                <img src="{% block logo_src %}/static/mapstore/img/geonode-logo.svg{% endblock %}">
+            {% endif %}
+        </a>
+    </li>
+</ul>
+{% endblock %}

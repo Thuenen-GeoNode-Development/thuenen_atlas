@@ -1,6 +1,31 @@
 {% extends "geonode-mapstore-client/snippets/custom_theme.html" %}
 
+{% load static %}
+
 {% block content %}
+
+<style>
+    @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Regular.woff2' %}") format('woff2');
+      font-weight: 400;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Bold.woff2' %}") format('woff2');
+      font-weight: 700;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'Poppins';
+      src: url("{% static 'subsites/poppins/Poppins-Italic.woff2' %}") format('woff2');
+      font-weight: 400;
+      font-style: italic;
+  }
+</style>
+
+
 <style>
   /* 
    * Custom Theming
@@ -41,9 +66,9 @@
     --gn-selected-bg: rgba(98, 152, 250, 0.4);
     --gn-selected-hover-bg: rgba(98, 152, 250, 0.1);
     --gn-footer-color: #000000;
-    --gn-footer-bg: #ffffff;
-    --gn-footer-link-color: #397AAB;
-    --gn-footer-link-hover-color: #1b4d74;
+    /*--gn-footer-bg: #65311E;*/
+    --gn-footer-link-color: #E2FC91;
+    --gn-footer-link-hover-color: #F3B34B;
     --gn-badge-color: #000000;
     --gn-badge-bg: #D5D5D5;
     --gn-loader-color: #000000;
@@ -202,8 +227,24 @@
     --gn-button-tray-badge-color: #733B25;
     --gn-button-tray-badge-bg: #1a1a1a;
   }
+  body {
+    --gn-font-family-base: 'Poppins';
+  }
+
+  #gn-brand-navbar {
+    background-color: #65301E;
+  }
+
+  #gn-hero {
+    background: linear-gradient(to right, #65311E, #894B31);
+  }
+
+  footer {
+      background: linear-gradient(to right, #65311E, #894B31);
+  }
 
 </style> 
+
 
 {% endblock %}
 

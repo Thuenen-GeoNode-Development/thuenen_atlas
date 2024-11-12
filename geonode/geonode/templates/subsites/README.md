@@ -1,6 +1,7 @@
 This document provides instructions on adding a subsite and working with it for UI customization.
 
-For documentation on the subsites module see: https://github.com/geosolutions-it/geonode-subsites
+For documentation on the subsites module see: https://github.com/geosolutions-it/geonode-subsites and https://docs.geonode.org/en/4.2.5/advanced/contrib/subsites/index.html
+
 For detailed information on geonode theming see: https://docs.geonode.org/en/master/basic/theme/index.html
 
 # Adding a New Subsite
@@ -22,7 +23,7 @@ or ovewrite individual section templates like `brand_navbar.html`, `footer.html`
 
 <img src="statics/subsite_name.png" alt="subsite name img" width="50%">
 
-7. Within the subsite settings, add a theme named *subsite_name*
+7. Within the subsite settings, add a theme (any name)
 
 <img src="statics/theme.png" alt="subsite theme img" width="50%">
 <img src="statics/theme_name.png" alt="subsite theme name img" width="50%">
@@ -65,3 +66,14 @@ The field "Custom CSS rules" overrides custom styles (`custom_theme.html`) defin
 Styling can be overridden by using the more concrete `.msgapi .gn-theme` css selector as shown with the following:
 
 <img src="statics/css.png" alt="css field img" width="50%">
+
+
+# Existing subsites
+This section describes steps for proper configuration of the subsites that are already part of the repository
+
+## Holisoils
+1. Add a new subsite in the admin panel. Site name has to be "holisoils"
+2. Add a theme.
+3. Within a theme, add a logo. Use "holisoils_logo_header.png" file in templates/subsites/statics
+4. Set Jumbotron title to "Holisoils"
+5. Set Jumbotron content to "Working together for forest soils"
