@@ -2,6 +2,7 @@
 import os
 import ast
 import logging
+from urllib.parse import urljoin
 
 # load the defaults settings
 from geonode.settings import *  # noqa
@@ -208,3 +209,137 @@ if LDAP_ENABLED:
     # GEONODE_LDAP_GROUP_PROFILE_FILTERSTR = os.getenv("LDAP_GROUP_SEARCH_FILTERSTR", default='(ou=research group)')
     # GEONODE_LDAP_GROUP_PROFILE_MEMBER_ATTR = os.getenv("LDAP_GROUP_PROFILE_MEMBER_ATTR", default='member')
     # --------------------------------------------------
+
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en")
+GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY = os.getenv("GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY", "mapstore")
+SITE_HOST_SCHEMA = os.getenv("SITE_HOST_SCHEMA", "http")
+SITE_HOST_NAME = os.getenv("SITE_HOST_NAME", "localhost")
+SITE_HOST_PORT = os.getenv("SITE_HOST_PORT", 8000)
+_default_siteurl = (
+    f"{SITE_HOST_SCHEMA}://{SITE_HOST_NAME}:{SITE_HOST_PORT}/"
+    if SITE_HOST_PORT
+    else f"{SITE_HOST_SCHEMA}://{SITE_HOST_NAME}/"
+)
+DEFAULT_TILE_SIZE = os.environ.get("DEFAULT_TILE_SIZE", 512)
+SITEURL = os.getenv("SITEURL", _default_siteurl)
+
+# CSW settings
+CATALOGUE = {
+    "default": {
+        # The underlying CSW implementation
+        # default is pycsw in local mode (tied directly to GeoNode Django DB)
+        "ENGINE": os.getenv("CATALOGUE_ENGINE", "geonode.catalogue.backends.pycsw_local"),
+        # pycsw in non-local mode
+        # 'ENGINE': 'geonode.catalogue.backends.pycsw_http',
+        # deegree and others
+        # 'ENGINE': 'geonode.catalogue.backends.generic',
+        # The FULLY QUALIFIED base url to the CSW instance for this GeoNode
+        "URL": os.getenv("CATALOGUE_URL", urljoin(SITEURL, "/catalogue/csw")),
+        # 'URL': 'http://localhost:8080/geonetwork/srv/en/csw',
+        # 'URL': 'http://localhost:8080/deegree-csw-demo-3.0.4/services',
+        # 'ALTERNATES_ONLY': True,
+    }
+}
+
+# pycsw settings
+PYCSW = {
+    # pycsw configuration
+    "CONFIGURATION": {
+        # uncomment / adjust to override server config system defaults
+        # 'server': {
+        #    'maxrecords': '10',
+        #    'pretty_print': 'true',
+        #    'federatedcatalogues': 'http://catalog.data.gov/csw'
+        # },
+        "server": {
+            "home": ".",
+            "url": CATALOGUE["default"]["URL"],
+            "encoding": "UTF-8",
+            "language": LANGUAGE_CODE if LANGUAGE_CODE in ("en", "fr", "el") else "en",
+            "maxrecords": "20",
+            "pretty_print": "true",
+            # 'domainquerytype': 'range',
+            "domaincounts": "true",
+            "profiles": "apiso,ebrim",
+        },
+        "manager": {
+            # authentication/authorization is handled by Django
+            "transactions": "false",
+            "allowed_ips": "*",
+            # 'csw_harvest_pagesize': '10',
+        },
+        "metadata": {
+            "inspire": {
+                "enabled": True,
+                "languages_supported": "eng,gre",
+                "default_language": "eng",
+                "date": "YYYY-MM-DD",
+                "gemet_keywords": "Utility and governmental services",
+                "conformity_service": "notEvaluated",
+                "contact_name": "Organization Name",
+                "contact_email": "Email Address",
+                "temp_extent": {
+                    "begin": "YYYY-MM-DD",
+                    "end": "YYYY-MM-DD",
+                },
+            },
+            "identification": {
+                "title": "GeoNode Catalogue",
+                "description": "GeoNode is an open source platform"
+                " that facilitates the creation, sharing, and collaborative use"
+                " of geospatial data",
+                "keywords": "sdi, catalogue, discovery, metadata," " GeoNode",
+                "keywords_type": "theme",
+                "fees": "None",
+                "accessconstraints": "None",
+            },
+            "provider": {
+                "name": "Organization Name",
+                "url": SITEURL,
+            },
+            "contact": {
+                "name": "Lastname, Firstname",
+                "position": "Position Title",
+                "address": "Mailing Address",
+                "city": "City",
+                "stateorprovince": "Administrative Area",
+                "postalcode": "Zip or Postal Code",
+                "country": "Country",
+                "phone": "+xx-xxx-xxx-xxxx",
+                "fax": "+xx-xxx-xxx-xxxx",
+                "email": "Email Address",
+                "url": "Contact URL",
+                "hours": "Hours of Service",
+                "instructions": "During hours of service. Off on " "weekends.",
+                "role": "pointOfContact",
+            },
+        },
+    }
+}
+
+"""
+MapStore2 REACT based Client parameters
+"""
+if GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY == "mapstore":
+    GEONODE_CLIENT_HOOKSET = os.getenv("GEONODE_CLIENT_HOOKSET", "geonode_mapstore_client.hooksets.MapStoreHookSet")
+
+    if "geonode_mapstore_client" not in INSTALLED_APPS:
+        INSTALLED_APPS += ("geonode_mapstore_client",)
+
+    def get_geonode_catalogue_service():
+        if PYCSW:
+            pycsw_config = PYCSW["CONFIGURATION"]
+            if pycsw_config:
+                pycsw_catalogue = {
+                    f"{pycsw_config['metadata']['identification']["title"]}": {
+                        "url": CATALOGUE["default"]["URL"],
+                        "type": "csw",
+                        "title": pycsw_config["metadata"]["identification"]["title"],
+                        "autoload": True,
+                        "layerOptions": {"tileSize": DEFAULT_TILE_SIZE},
+                    }
+                }
+                return pycsw_catalogue
+        return None
+
+    GEONODE_CATALOGUE_SERVICE = get_geonode_catalogue_service()

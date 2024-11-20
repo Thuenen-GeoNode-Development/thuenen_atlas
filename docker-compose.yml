@@ -15,6 +15,11 @@ x-common-django: &default-common-django
     - ./geonode/geonode/catalogue/templates/catalogue/full_metadata.xml:/usr/src/geonode/geonode/catalogue/templates/catalogue/full_metadata.xml
     - ./geonode/geonode/catalogue/backends/pycsw_local_mappings.py:/usr/src/geonode/geonode/catalogue/backends/pycsw_local_mappings.py
     - ./geonode/geonode/base/models.py:/usr/src/geonode/geonode/base/models.py
+    - ./geonode/geonode/catalogue/backends/pycsw_local.py:/usr/src/geonode/geonode/catalogue/backends/pycsw_local.py
+    - ./geonode/geonode/catalogue/tests.py:/usr/src/geonode/geonode/catalogue/tests.py
+    - ./geonode/geonode/catalogue/views.py:/usr/src/geonode/geonode/catalogue/views.py
+    - ./geonode/geonode/layers/views.py:/usr/src/geonode/geonode/layers/views.py
+    - ./geonode/geonode/views.py:/usr/src/geonode/geonode/views.py
     - ./geonode/geonode/templates/subsites:/usr/src/geonode/geonode/templates/subsites
     - ./geonode/geonode/templates/subsites/statics/:/usr/src/geonode/geonode/static/subsites
     - ./geonode/fixtures:/usr/src/geonode/fixtures
