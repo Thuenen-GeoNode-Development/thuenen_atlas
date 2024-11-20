@@ -331,7 +331,7 @@ if GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY == "mapstore":
             pycsw_config = PYCSW["CONFIGURATION"]
             if pycsw_config:
                 pycsw_catalogue = {
-                    f"{pycsw_config['metadata']['identification']["title"]}": {
+                    f"{pycsw_config['metadata']['identification']['title']}": {
                         "url": CATALOGUE["default"]["URL"],
                         "type": "csw",
                         "title": pycsw_config["metadata"]["identification"]["title"],

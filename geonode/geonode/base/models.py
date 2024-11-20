@@ -1460,13 +1460,13 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                 description = f"{self.title} ({link.name} Format)"
                 links.append((self.title, description, _link_type, link.url))
         return links
-    
+
     def pycsw_contacts(self):
         """assemble contacts for pycsw"""
         site_url = settings.SITEURL.rstrip("/") if settings.SITEURL.startswith("http") else settings.SITEURL
         contact_roles = self.get_defined_multivalue_contact_roles()
         if self.owner:
-            contact_roles['Owner'] = [self.owner]
+            contact_roles["Owner"] = [self.owner]
         contacts = []
         for cont_lbl, cont_vals in contact_roles.items():
             for cont in cont_vals:
