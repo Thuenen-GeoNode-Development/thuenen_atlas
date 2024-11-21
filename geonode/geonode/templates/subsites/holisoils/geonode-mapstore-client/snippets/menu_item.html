@@ -3,12 +3,16 @@
     {% if menu_item.type == 'link' %}
         <li>
             <a
-                id={{ menu_item.label | slugify }}
-                href="{% if menu_item.label == 'Home' %}/holisoils{% else %}{{ menu_item.href }}{% endif %}"
+                id="{{ menu_item.label | slugify }}"
+                href="{% if menu_item.label == 'Home' %}/holisoils/about-holisoils{% else %}{{ menu_item.href }}{% endif %}"
                 target="{{ menu_item.target }}"
                 class="nav-link btn btn-{{variant|default:'default'}}"
             >
+            {% if menu_item.label == 'Home' %}
+            About
+            {% else %}
                 {% trans menu_item.label %}
+            {% endif %}
             </a>
         </li>
     {% endif %}

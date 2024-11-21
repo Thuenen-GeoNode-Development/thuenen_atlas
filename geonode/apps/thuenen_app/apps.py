@@ -12,6 +12,8 @@ def run_setup_hooks(*args, **kwargs):
     template_dir = os.path.join(LOCAL_ROOT, "templates")
     settings.TEMPLATES[0]["DIRS"].insert(0, template_dir)
 
+    from subsites.views import SubsiteCatalogueViewSet
+
     urlpatterns += [
         re_path(
             r"^legal_notice/$",
@@ -28,7 +30,12 @@ def run_setup_hooks(*args, **kwargs):
             TemplateView.as_view(template_name="privacy-cookies.html"),
             name="privacy-cookies",
         ),
+        re_path(r"^(?P<subsite>[^/]*)/about-holisoils/$",
+            SubsiteCatalogueViewSet.as_view(template_name="about-holisoils.html"),
+            name="about-holisoils",
+        ),
         re_path(r"", include("subsites.urls")),
+        
     ]
 
 
