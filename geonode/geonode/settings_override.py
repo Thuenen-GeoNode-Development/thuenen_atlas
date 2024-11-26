@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
+#
+# Take the GeoNode settings documentation as a reference:
+#
+# https://docs.geonode.org/en/master/basic/settings/index.html#settings
+#
 import os
+import sys
 import ast
 import logging
 
 # load the defaults settings
+# sets defaults settings and from .env
 from geonode.settings import *  # noqa
 from geonode.settings import (  # noqa
     DEBUG,
@@ -23,19 +30,15 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None if DEBUG else "same-origin"
 
 # relax origins for geonode-mapstore-client development
 CSRF_TRUSTED_ORIGINS = (
-    ["http://172.18.0.1:8001", "http://localhost:8081"]
+    ["http://172.18.0.1", "http://172.18.0.1:8001", "http://localhost:8081"]
     if DEBUG
     else ast.literal_eval(os.getenv("CSRF_TRUSTED_ORIGINS", "[]"))
-)  # noqa
+)
 CORS_ALLOWED_ORIGINS = (
-    ["http://172.18.0.1:8001", "http://localhost:8081"]
+    ["http://172.18.0.1", "http://172.18.0.1:8001", "http://localhost:8081"]
     if DEBUG
     else ast.literal_eval(os.getenv("CORS_ALLOWED_ORIGINS", "[]"))
-)  # noqa
-
-
-STATIC_ROOT = "/mnt/volumes/statics/static/"
-MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
+)
 
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
@@ -43,6 +46,7 @@ MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
 LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
 STATIC_ROOT = "/mnt/volumes/statics/static/"
 MEDIA_ROOT = "/mnt/volumes/statics/uploaded/"
+ASSETS_ROOT = "/mnt/volumes/statics/assets/"
 
 
 # Additional directories which hold static files
@@ -68,13 +72,12 @@ LOGGING = {
             "style": "{",
         },
     },
-    "filters": {
-        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}
-    },
+    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},  # noqa
     "handlers": {
         "console": {
             "level": "WARNING",
             "class": "logging.StreamHandler",
+            "stream": sys.stdout,
             "formatter": "simple",
         },
         "mail_admins": {
@@ -123,10 +126,10 @@ LOGGING = {
     },
 }
 
-IMPORTER_HANDLERS = (
+IMPORTER_HANDLERS = [
     "importer_datapackage.handlers.datapackage.handler.DataPackageFileHandler",
     *IMPORTER_HANDLERS,
-)
+]
 
 INSTALLED_APPS += (
     "atlas",
@@ -137,6 +140,7 @@ INSTALLED_APPS += (
 )
 
 ENABLE_SUBSITE_CUSTOM_THEMES = True
+SUBSITE_READ_ONLY = False
 
 # add extra translations
 # add to .po file in thuenen_atlas/geonode/apps/thuenen_app/locale

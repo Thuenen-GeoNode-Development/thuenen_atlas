@@ -1,13 +1,25 @@
-# Thünen Atlas, GeoNode Instance 
+# Geonode Installation
 
-This document will guide you through the development setup of the Thünen Atlas which is based on [GeoNode](https://geonode.org/), a spatial content management system.
-The needed components are available as [Docker](https://www.docker.com/) base images and will be customized and set up and run via the [docker-compose](https://docs.docker.com/compose/) tool.
+This document will guide you through the installation of [GeoNode](https://geonode.org/), a spatial content management system.
+The needed components are available as [Docker](https://www.docker.com/) images and will be set up and run via the [docker compose](https://docs.docker.com/compose/) tool.
+
+## Background
+
+This blueprint is an opnionated GeoNode setup which evolved from several upstream discussions[^1][^2]. The main goal of this blueprint is to have a simplified view on the GeoNode actual setup with less cluttered configuration while preserving flexibility. At the time of writing GeoNode setup is much convoluted at several places so one have to watch out making changes to the defaults (lots of things have side effects). However, the blueprint cannot solve the upstream issues, but tries to narrow the focus on the most important parts. 
+
+We tend to establish a better maintainable project setup[^2][^3] than [the official geonode-project](https://github.com/GeoNode/geonode-project) offers at the moment. Additionally, we added a development setup [using `devcontainer`](https://containers.dev/) configuration [for the Thuenen Atlas](https://github.com/Thuenen-GeoNode-Development/thuenen_atlas), which integrates nicely with IDEs [like vs-code](https://code.visualstudio.com/docs/devcontainers/containers).
+
+Feel free to test and report any findings like bugs, issues, and even conceptual things. We hope, the setup turns to be helpful for other projects and are eager to further improve the setup based on your requirements. In any case the blueprint may give you a good starting point to create you own setup.
+
+[^1]: https://github.com/GeoNode/geonode-project/issues/471
+[^2]: https://github.com/GeoNode/geonode-project/discussions/460
+[^3]: https://lists.osgeo.org/pipermail/geonode-devel/2023-August/003335.html
 
 ## Component Overview
 
 Here is a short overview of the installed components and how they are connected.
 
-![GeoNode Architecture](./docs/geonode_architecture_4x.png "Geonode Architecture")
+![GeoNode Architecture](./img/geonode_architecture_4x.png "Geonode Architecture")
 
 The components are:
 
@@ -68,6 +80,27 @@ Locate your browser to http://172.18.0.1/ to access the GeoNode UI.
 > We make GeoNode available under IP `172.18.0.1` so that no components try to communicate via `localhost` (each container has their own loopback interface).
 
 
+## Configuration
+
+> :bulb: **Note**
+>
+> Settings (e.g. geodatabase parameters) are mainly configured in the `.env` file. 
+> To review in-built default settings of an image, run the `env` command on an image.
+> For example `docker run geonode/geoserver env | sort`.
+>
+> For a complete set of available options take the [GeoNode Settings](https://docs.geonode.org/en/master/basic/settings/index.html#settings) documentation as a reference.
+
+The containers get configured during creation via environment variables. 
+The `geonode/settings.py` settings module takes further configuration of the GeoNode containers (`django` and `celery`) and aligns some names with those documented.
+
+
+Copy the `sample.env` to `.env` and make your changes (`.env` is not versioned).
+For a quick start taking default values you can run `docker compose up -d --env-file=sample.env`.
+
+
+Have a look at the [Ways to set environment variables in Compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/) documentation.
+
+
 ### TLS Config
 
 If you want to configure a TLS certificate, you can mount key and cert as `pem`s in the `geonode` service within the `docker-compose.yml` file.
@@ -83,26 +116,33 @@ Uncomment the corresponding lines:
  ```
 
 
-To shutdown GeoNode, run:
+### Volume Configuration
 
-```sh
-docker-compose down
+By default compose creates [named volumes](https://docs.docker.com/reference/compose-file/volumes/) on its first start (or in case you stopped using the `-v` flag).
+The default volume [configuration is included](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/) from `./compose-volumes_default.yml`.
+
+To configure a different volume setup copy `./compose-volumes_default.yml` to `./compose-volumes_myconfig.yml`.
+Now, adjust the volume configuration for each volume:
+
+```yml
+geoserver-data-dir:
+  name: ${COMPOSE_PROJECT_NAME}-gsdatadir
+  driver_opts:
+    device: /mnt/geonode-volume/geoserver_data
+    type: none
+    o: bind
 ```
 
-To remove all volumes you have to append the `-v` flag.
+Make sure to have all volume definitions in `/compose-volumes_myconfig.yml`.
 
+Define `VOLUME=myconfig` as an environment variable and verify your setup via `docker compose config | less`.
 
-## Configuration
+> :bulb: **Hint:**
+>
+> Bind volumes are not created by Docker during startup.
+> Make sure all directories exist or Docker will fail to mount.
 
-Configuration can done in `./.env` file.
-You can make a copy from `./.env.sample`.
-We keep the contents to a bare minimum needed to run the whole setup.
-This configuration is used during `docker-compose` runs, and also when running the devcontainer.
-
-There is also the `./geonode/settings.py` which can be used to adjust Django settings, like logging, context processors, installed apps and more.
-In the `django` container `./geonode/settings.py` is the main `DJANGO_SETTINGS_MODULE`, pre-loads the default settings and becomes available as `settings_override.py`.
-
-For more information about configuring GeoNode, consult the [Settings reference](https://docs.geonode.org/en/master/basic/docker_env_vars/index.html#dockerenvvars) of the GeoNode documentation.
+If everything looks good start up the services.
 
 
 ## Development
@@ -179,7 +219,7 @@ Configure that port in your `./geonode_mapstore_client/client/.env` file:
 ```sh
 DEV_SERVER_PROTOCOL=http
 DEV_SERVER_HOSTNAME=localhost
-DEV_TARGET_GEONODE_HOST=localhost:8001
+DEV_TARGET_GEONODE_HOST=172.18.0.1:8001
 ```
 
 Then build and start the client:
@@ -190,7 +230,7 @@ npm install
 npm start
 ```
 
-Make sure to use node version `12.x` (e.g. via `nvm`).
+Make sure to use a compatible node version (e.g. via `nvm`).
 
 
 > :bulb: **Note**
@@ -266,41 +306,8 @@ The following workflow proposes how to develop feature branches based on a dedic
    Do not rebase the feature branch onto the main development branch!
    This would smudge the dedicated commit you created the feature branch from.
 
-## Docker Images
 
-All images are based on pre-built base images.
-This ensure more performant builds regarding to time and size.
-Docker provides concepts to extend and adjust the setup, for example via volume mounts, or building atop of those images.
-
-
-> :bulb: **Base Images**
->
-> As for today, tags of official GeoNode images are not as stable as we would expect from an upstream project.
-> Therefore, we rely on images built from [the `52north/geonode` fork](https://github.com/52north/geonode/tree/52n-master) of GeoNode upstream.
-> This way, we can track upstream changes (to stay close to the upstream) and guarantee stable tags at the same time.
->
-> However, as said before, Thünen Atlas has unmerged changes on GeoNode core, and uses a project specific image which is built from [a project specific fork of GeoNode](https://github.com/Thuenen-GeoNode-Development/geonode).
-
-
-The project prepares `Dockerfile`s for each component to allow a well-defined extension structure:
-
-```sh
-docker
-├── geonode                         # Extension point for GeoNode
-│   ├── Dockerfile                  # Uses 52north/geonode_thuenen
-│   ├── geonode-mapstore-client     # Submodule for the GeoNode UI
-│   └── requirements.txt            # Further packages to install
-├── geoserver                       # Extension point for GeoServer
-│   └── Dockerfile                  # Uses 52north/geonode-geoserver
-├── geoserver_data                  # Extension point for GeoServer data dir
-│   └── Dockerfile                  # Uses geonode/geonode_data (may change when tagging becomes unstable as well)
-├── nginx                           # Extension point for Nginx
-│   └── Dockerfile                  # Uses geonode/geonode-nginx
-└── postgresql                      # Extension point for Postgres
-    └── Dockerfile                  # Uses geonode/postgis (may change when tagging becomes unstable as well)
-```
-
-## Testing
+### Testing
 
 To run the tests a running GeoNode instance is needed.
 All test data is stored in separate databases which are prefixed by `TEST_`. 
@@ -322,5 +329,88 @@ Afterwards the necessary test databases and users have been created.
 Now, you can start the tests by running:
 
 ```sh
-python manage.py test -v 3 --keepdb <[optional] the module to test>
+python manage.py test -v 3 --keepdb [ module to test ]
+```
+
+
+## Docker Images
+
+All images are based on pre-built base images.
+This ensures more performant builds regarding to time and size.
+Docker provides concepts to extend and adjust the setup, for example via volume mounts, or building atop of those images.
+
+
+> :bulb: **Base Images**
+>
+> The Thünen Atlas GeoNode instance contains unmerged changes and customized features.
+> Therefore it uses a project specific image which is built from [a project specific fork of GeoNode](https://github.com/Thuenen-GeoNode-Development/geonode).
+> The Docker images are built from [the `Thuenen-GeoNode-Development/geonode` fork](https://github.com/Thuenen-GeoNode-Development/geonode/).
+> This way, we can track upstream changes (to stay close to the upstream) and keep all customization and upstream fixes in our repository.
+
+
+The project prepares `Dockerfile`s for each component to allow a well-defined extension structure, e.g.:
+
+```sh
+docker
+├── geonode                         # Extension point for GeoNode
+│   ├── Dockerfile                  # builds thuenen-atlas/geonode_django on top of geonode/geonode
+│   ├── geonode-mapstore-client     # Submodule for the GeoNode UI
+│   └── requirements.txt            # Further packages to install
+├── geoserver                       # Extension point for GeoServer
+│   └── Dockerfile                  # Uses geonode/geoserver
+├── geoserver_data                  # Extension point for GeoServer data dir
+│   └── Dockerfile                  # Uses geonode/geonode_data (may change when tagging becomes unstable as well)
+├── nginx                           # Extension point for Nginx
+│   └── Dockerfile                  # Uses geonode/geonode-nginx
+└── postgresql                      # Extension point for Postgres
+    └── Dockerfile                  # Uses geonode/postgis (may change when tagging becomes unstable as well)
+```
+
+
+
+## Start and Run
+
+### Docker-Compose Basics
+
+Run `docker compose up -d` to start all geonode components.
+Review all started components by executing `docker compose ps`. 
+You can follow logs via `docker compose logs -f` and optionally pass a service to only follow a service's log.
+
+Stop all components via `docker compose down`, and pass a `-v` flag to clean up all volumes (CAUTION: removes all persisted data).
+
+For more features and available commands, `docker compose --help`, or read [the docker compose CLI documentation](https://docs.docker.com/compose/reference/).
+
+### Add a Service Unit
+
+When running GeoNode on a systemd-based Linux, you may want to add a service unit:
+
+/etc/systemd/system/geonode.service
+```sh
+[Unit]
+Description=GeoNode Docker Installation
+
+[Service]
+Type=oneshot
+ExecStart=docker compose up -d /path/to/workingcopy
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then reload the systemd daemon:
+
+```sh
+systemctl daemon-reload
+```
+
+And enable GeoNode start on each boot:
+
+```sh
+systemctl enable geonode.service
+```
+
+Check the service status:
+
+```sh
+systemctl status geonode.service
 ```
