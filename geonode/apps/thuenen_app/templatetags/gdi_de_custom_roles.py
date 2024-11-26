@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-GDI_DE_ROLE_LABEL_MAPPING = {
+GMD_ROLE_LABEL_MAPPING = {
     'Owner': 'owner',
     'Point of Contact': 'pointOfContact',
     'Metadata Author': 'author',
@@ -19,7 +19,7 @@ GDI_DE_ROLE_LABEL_MAPPING = {
 @register.filter
 def get_gdi_compliant_role_label(value):
     """
-    Replace labels based on the GDI_DE_ROLE_LABEL_MAPPING dict.
+    Replace labels based on the GMD_ROLE_LABEL_MAPPING dict.
     Example: {{ role_label_string|get_gdi_compliant_role_label }}
     """
-    return GDI_DE_ROLE_LABEL_MAPPING.get(value, value)
+    return GMD_ROLE_LABEL_MAPPING.get(value, value)

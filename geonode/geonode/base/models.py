@@ -89,7 +89,7 @@ from geonode.people.enumerations import ROLE_VALUES
 from urllib.parse import urlsplit, urljoin
 from geonode.storage.manager import storage_manager
 
-from thuenen_app.templatetags.gdi_de_custom_roles import GDI_DE_ROLE_LABEL_MAPPING
+from thuenen_app.templatetags.gdi_de_custom_roles import GMD_ROLE_LABEL_MAPPING
 
 logger = logging.getLogger(__name__)
 
@@ -1474,7 +1474,7 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                     {
                         "individualname": cont.full_name_or_nick,
                         "organization": cont.organization,
-                        "role": GDI_DE_ROLE_LABEL_MAPPING[cont_lbl],
+                        "role": GMD_ROLE_LABEL_MAPPING[cont_lbl],
                         "url": urljoin(site_url, cont.get_absolute_url()),
                     }
                 )
