@@ -71,9 +71,24 @@ Styling can be overridden by using the more concrete `.msgapi .gn-theme` css sel
 # Existing subsites
 This section describes steps for proper configuration of the subsites that are already part of the repository
 
-## Holisoils
+## HoliSoils
 1. Add a new subsite in the admin panel. Site name has to be "holisoils"
 2. Add a theme.
 3. Within a theme, add a logo. Use "holisoils_logo_header.png" file in templates/subsites/statics
-4. Set Jumbotron title to "Holisoils"
+4. Set Jumbotron title to "HoliSoils"
 5. Set Jumbotron content to "Working together for forest soils"
+
+### Adding a "Subsites" button to the navigation bar
+It is possible to add a navigation dropdown menu that looks this:
+<img src="statics/subsites-button.png" alt="subsites button img" width="50%">
+
+In order to do that, two step are necessary:
+1. In the admin panel, go to "Menus". Add a new menu, set Title to "Subsites", Placeholder to "TOPBAR_MENU_RIGHT", Order to "2".
+
+<img src="statics/menus.png" alt="menus in the admin panel img" width="50%">
+
+2. In the admin panel, go to "Menu items". Add two items. First with a title "Thünen-Atlas", menu specified to be "Subsites", order "1" and URL to be "/", leave "blank target" checkbox blank. Second should be titled "HoliSoils", have menu "Subsites", URL "/holisoils" and "blank target" also unchecked.
+
+<img src="statics/menu-items.png" alt="menu items in the admin panel img" width="50%">
+
+The button would appear both on the Atlas home page, as well as all subsite pages. 
