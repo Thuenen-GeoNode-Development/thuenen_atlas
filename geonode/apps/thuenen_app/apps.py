@@ -4,7 +4,6 @@ from django.apps import AppConfig
 
 def run_setup_hooks(*args, **kwargs):
     from django.conf import settings
-    from django.urls import include
     from django.views.generic import TemplateView
     from geonode.urls import urlpatterns, re_path
 
@@ -14,7 +13,7 @@ def run_setup_hooks(*args, **kwargs):
 
     from subsites.views import SubsiteCatalogueViewSet
 
-    urlpatterns += [
+    custom_url_patterns = [
         re_path(
             r"^legal_notice/$",
             TemplateView.as_view(template_name="legal-notice.html"),
@@ -34,9 +33,10 @@ def run_setup_hooks(*args, **kwargs):
             SubsiteCatalogueViewSet.as_view(template_name="about-holisoils.html"),
             name="about-holisoils",
         ),
-        re_path(r"", include("subsites.urls")),
-        
     ]
+    
+    for url_pattern in custom_url_patterns:
+        urlpatterns.insert(0, url_pattern)
 
 
 class ThuenenAppConfig(AppConfig):
