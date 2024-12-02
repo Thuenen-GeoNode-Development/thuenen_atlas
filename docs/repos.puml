@@ -1,0 +1,104 @@
+@startuml Thünen Atlas Repository Overview
+
+' left to right direction
+' top to bottom direction
+skinparam linetype polyline
+' skinparam linetype ortho
+
+    
+frame "geosolutions" {
+
+    frame "GeoNode" {
+        
+        component "geonode" as upstream_geonode #397aab {
+
+        }
+        component "geonode-mapstore-client" as upstream_ui #397aab {
+
+        }
+
+    }
+
+    frame "geosolutions-it" {
+        
+        component "MapStore2" as upstream_mapstore #009485 {
+
+        }
+        component "geonode-subsites" as app_subsites <<contrib_app>> {
+
+        }
+    }
+}
+
+frame "GeoNodeUserGroup-DE" {
+    component "contrib_externalapplications" as app_externalapplications <<contrib_app>> {
+
+    }
+
+    node "geonode-docker-blueprint" as usergroup_blueprint <<project blueprint>> #D4ED31 {
+
+    }
+    
+    node "geonode-dev-datapackage" as usergroup_datapackage_dev #D4ED31 {
+        component "contrib_datapackage" as app_datapackage <<contrib_app>> {
+
+        }
+        component "geonode" as app_datapackage_geonode <<datapackage_tabular-data>> #397aab {
+
+        }
+        component "geonode-mapstore-client" as app_datapackage_ui <<datapackage_tabular-data>> #397aab {
+
+        }
+    }
+
+}
+
+frame "Thuenen-GeoNode-Development" {
+
+    node "thuenen_atlas" as thuenen_atlas #D4ED31 {
+
+        component "geonode" as thuenen_geonode <<thuenen_4.x>> #397aab {
+
+        }
+
+        component "geonode-mapstore-client" as thuenen_ui <<thuenen_4.x>> #397aab {
+
+        }
+        
+        component "MapStore2" as thuenen_mapstore <<thuenen_2024.02.xx>> #009485 {
+
+        }
+
+    }
+
+}
+
+
+thuenen_atlas --> app_datapackage: requirements.txt
+thuenen_geonode --> app_datapackage_geonode: upstream
+thuenen_ui -> app_datapackage_ui: upstream
+
+' thuenen_atlas
+thuenen_atlas -> app_externalapplications: Git Submodule
+
+thuenen_atlas -> app_subsites: requirements.txt
+thuenen_atlas -> usergroup_blueprint: upstream
+thuenen_geonode -> upstream_geonode: upstream
+
+thuenen_ui -u-> upstream_ui: upstream
+thuenen_mapstore -u-> upstream_mapstore: upstream
+
+' usergroup blueprint
+' usergroup_blueprint -> upstream_geonode
+
+' usergroup datapackage
+usergroup_datapackage_dev -> usergroup_blueprint: upstream
+' app_datapackage_geonode -> upstream_geonode: upstream
+' app_datapackage_ui -> upstream_ui: upstream
+' app_datapackage_dev -> app_datapackage: requirements.txt
+' app_datapackage_dev -> app_datapackage_geonode: Dockerfile Checkout
+' app_datapackage_dev -> app_datapackage_ui: Git Submodule
+
+' GeoNode in general
+upstream_ui -> upstream_mapstore
+@enduml
