@@ -19,15 +19,15 @@ GeoNode Docker Blueprint
 
 <pre>
 
-             <a href="https://github.com/Thuenen-GeoNode-Development/thuenen_atlas">thuenen_atlas</a>
-                   |
-                   | upstream
-                   v
-   <a href="https://github.com/GeoNodeUserGroup-DE/geonode-blueprint-docker">usergroup/geonode-docker-blueprint</a>
-                   ^
-                   | upstream
-                   |
-    <a href="https://github.com/GeoNodeUserGroup-DE/geonode-dev-datapackage">usergroup/geonode-dev-datapackage</a>
+                            <a href="https://github.com/Thuenen-GeoNode-Development/thuenen_atlas">thuenen_atlas</a>
+                                  |
+                                  | upstream
+                                  v
+                  <a href="https://github.com/GeoNodeUserGroup-DE/geonode-blueprint-docker">usergroup/geonode-docker-blueprint</a>
+                                  ^
+                                  | upstream
+                                  |
+                   <a href="https://github.com/GeoNodeUserGroup-DE/geonode-dev-datapackage">usergroup/geonode-dev-datapackage</a>
 
 </pre>
 
@@ -35,17 +35,17 @@ Use features of Git or Docker (compose) to integrate external apps:
 
 <pre>
 
-          <a href="https://github.com/GeoNodeUserGroup-DE/contrib_externalapplications/">usergroup/contrib_externalapplications</a>
-                           ^
-                           | submodule/volume 
-                           |
-                     <a href="https://github.com/Thuenen-GeoNode-Development/thuenen_atlas">thuenen_atlas</a>
-                       |        |
-  via requirements.txt |        | via requirements.txt
-                       |        v
-                       |     <a href="https://github.com/GeoNodeUserGroup-DE/contrib_datapackage">usergroup/contrib_datapackage</a>
-                       v
-            <a href="https://github.com/geosolutions-it/geonode-subsites">geosolutions/geonode-subsites</a>
+                 <a href="https://github.com/GeoNodeUserGroup-DE/contrib_externalapplications/">usergroup/contrib_externalapplications</a>
+                                  ^
+                                  | submodule/volume 
+                                  |
+                            <a href="https://github.com/Thuenen-GeoNode-Development/thuenen_atlas">thuenen_atlas</a>
+                              |        |
+         via requirements.txt |        | via requirements.txt
+                              |        v
+                              |     <a href="https://github.com/GeoNodeUserGroup-DE/contrib_datapackage">usergroup/contrib_datapackage</a>
+                              v
+                   <a href="https://github.com/geosolutions-it/geonode-subsites">geosolutions/geonode-subsites</a>
 </pre>
 
 Thünen Atlas incorporates customized GeoNode components which lay in their own Git repository each tracking their core upstream repository.
@@ -56,35 +56,33 @@ Such development is done isolated from Thünen Atlas in a separated development 
 Updating features would require to merge changes from upstream core and upstream feature development.
 
 <pre>
-
-
-                   <a href="https://github.com/GeoNode/geonode">geonode/geonode</a>
-                     ^         ^                                    
-      upstream/4.4.x |         | upstream/4.4.x
-                     |         |
-                     |      <a href="https://github.com/Thuenen-GeoNode-Development/geonode">thuenen/geonode</a>
-                     |         |
-                     |         | usergroup/datapackage_tabular-data
-                     |         v 
-                  <a href="https://github.com/GeoNodeUserGroup-DE/geonode">usergroup/geonode</a>
-
-
-            <a href="https://github.com/GeoNode/geonode">geonode/geonode-mapstore-client</a>
-                  ^                  ^
-   upstream/4.4.x |                  | upstream/4.4.x
-                  |                  |
-                  |       <a href="https://github.com/Thuenen-GeoNode-Development/geonode-mapstore-client">thuenen/geonode-mapstore-client</a>
-                  |                  |
-                  |                  | usergroup/datapackage_tabular-data
-                  |                  v
-            <a href="https://github.com/GeoNodeUserGroup-DE/geonode-mapstore-client">usergroup/geonode-mapstore-client</a>
-
-
-                  <a href="https://github.com/geosolutions-it/MapStore2">geosolutions/MapStore2</a>
-                              ^
-                              | upstream/2024.02.xx
-                              |
-                   <a href="https://github.com/Thuenen-GeoNode-Development/MapStore2">thuenen/MapStore2</a>
+                            <a href="https://github.com/GeoNode/geonode">geonode/geonode</a>
+                              ^         ^                                    
+               upstream/4.4.x |         | upstream/4.4.x
+                              |         |
+                              |      <a href="https://github.com/Thuenen-GeoNode-Development/geonode">thuenen/geonode</a>
+                              |         |
+                              |         | usergroup/datapackage_tabular-data
+                              |         v 
+                           <a href="https://github.com/GeoNodeUserGroup-DE/geonode">usergroup/geonode</a>
+         
+         
+                     <a href="https://github.com/GeoNode/geonode">geonode/geonode-mapstore-client</a>
+                           ^                  ^
+            upstream/4.4.x |                  | upstream/4.4.x
+                           |                  |
+                           |       <a href="https://github.com/Thuenen-GeoNode-Development/geonode-mapstore-client">thuenen/geonode-mapstore-client</a>
+                           |                  |
+                           |                  | usergroup/datapackage_tabular-data
+                           |                  v
+                     <a href="https://github.com/GeoNodeUserGroup-DE/geonode-mapstore-client">usergroup/geonode-mapstore-client</a>
+         
+         
+                           <a href="https://github.com/geosolutions-it/MapStore2">geosolutions/MapStore2</a>
+                                       ^
+                                       | upstream/2024.02.xx
+                                       |
+                            <a href="https://github.com/Thuenen-GeoNode-Development/MapStore2">thuenen/MapStore2</a>
                               
 </pre>
 
