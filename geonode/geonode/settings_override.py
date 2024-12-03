@@ -24,7 +24,7 @@ from geonode.settings import (  # noqa
 
 
 SITENAME = os.getenv("SITENAME", "thuenen_atlas")
-X_FRAME_OPTIONS = "SAMEORIGIN"
+X_FRAME_OPTIONS = os.getenv("X_FRAME_OPTIONS", "SAMEORIGIN")
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None if DEBUG else "same-origin"
 
 
