@@ -5,33 +5,34 @@
 {{ block.super }}
 
 <script>
+    (function() {
+        const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
+        window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
+            if (overrideLocalConfig) {
+                overrideLocalConfig(localConfig, _);
+            }
     
-    const { overrideLocalConfig } = window.__GEONODE_CONFIG__;
-    window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
-        if (overrideLocalConfig) {
-            overrideLocalConfig(localConfig, _);
-        }
-
-        // do local config override
-
-        Object.keys(localConfig.plugins).forEach((pageName) => {
-            localConfig.plugins[pageName].forEach((plugin) => {
-                if (["DetailViewer", "LayerDetailViewer"].includes(plugin.name) && plugin.cfg && plugin.cfg.tabs) {
-                    plugin.cfg.tabs.forEach((tab) => {
-                        if (tab.id === "info" && Array.isArray(tab.items)) {
-                            tab.items.splice(2, 0, {
-                                "type": "link",
-                                "labelId": "gnviewer.doi",
-                                "href": "{'https://doi.org/' + context.get(state('gnResourceData'), 'doi')}",
-                                "value": "{context.get(state('gnResourceData'), 'doi')}"
-                            });
-                        }
-                    });
-                }
+            // do local config override
+    
+            Object.keys(localConfig.plugins).forEach((pageName) => {
+                localConfig.plugins[pageName].forEach((plugin) => {
+                    if (["DetailViewer", "LayerDetailViewer"].includes(plugin.name) && plugin.cfg && plugin.cfg.tabs) {
+                        plugin.cfg.tabs.forEach((tab) => {
+                            if (tab.id === "info" && Array.isArray(tab.items)) {
+                                tab.items.splice(2, 0, {
+                                    "type": "link",
+                                    "labelId": "gnviewer.doi",
+                                    "href": "{'https://doi.org/' + context.get(state('gnResourceData'), 'doi')}",
+                                    "value": "{context.get(state('gnResourceData'), 'doi')}"
+                                });
+                            }
+                        });
+                    }
+                });
             });
-        });
-
-        return localConfig;
-    }
+    
+            return localConfig;
+        }
+    })();
 </script>
 {% endblock %}
