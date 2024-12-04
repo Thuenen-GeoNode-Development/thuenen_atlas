@@ -16,7 +16,7 @@
 
         Object.keys(localConfig.plugins).forEach((pageName) => {
             localConfig.plugins[pageName].forEach((plugin) => {
-                if (['DetailViewer'].includes(plugin.name) && plugin.cfg && plugin.cfg.tabs) {
+                if (["DetailViewer", "LayerDetailViewer"].includes(plugin.name) && plugin.cfg && plugin.cfg.tabs) {
                     plugin.cfg.tabs.forEach((tab) => {
                         if (tab.id === "info" && Array.isArray(tab.items)) {
                             tab.items.splice(2, 0, {
