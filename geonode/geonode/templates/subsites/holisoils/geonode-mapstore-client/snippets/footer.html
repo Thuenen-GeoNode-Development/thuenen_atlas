@@ -1,51 +1,42 @@
 {% extends "geonode-mapstore-client/snippets/footer.html" %}
 
-
+{% load i18n %}
 {% load static %}
-
-{% block funding_info %}
-<div style="display:flex;">
-    <ul>
-        <li title="https://holisoils.eu/">
-            <div class="footer-logo" style="display: inline-block; margin: 10px;">
-                <a href="https://holisoils.eu/">
-                    <img src="{% static 'subsites/holisoils_logo_footer.svg' %}" alt="Holisoils Logo"
-                        style="max-height: 50px; width: auto;">
-                </a>
-            </div>
-        </li>
-        <li title="What is Horizon 2020?">
-            <div class="footer-logo" style="display: inline-block; margin: 10px;">
-                <a href="https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-2020_en">
-                    <img src="{% static 'subsites/logo_EU.svg' %}" alt="EU flag and funding info"
-                        style="max-height: 50px; width: auto;">
-                </a>
-            </div>
-        </li>
-    </ul>
-</div>
-{% endblock %}
-
-<!-- <footer class="gn-footer" style="padding: 20px 0; text-align: center;">
-    <div class="footer-content" style="max-width: 800px; margin: 0 auto;">
-        
-
-        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: center;">
-            <li style="margin-bottom: 10px;">
-                <a href="https://geonode.org/" class="nav-link" style="text-decoration: none; color: inherit;">
-                    <span>geonode.org</span>
+<footer class="gn-footer" style="display: block;">
+    {% block footer_links %}
+    <div style="display:flex">
+        <ul style="align-items: center">
+            <li>
+                <a href="{% url "developer" %}" class="nav-link">
+                    <span>{% trans "Developers" %}</span>
                 </a>
             </li>
-            <li style="margin-bottom: 10px;">
-                <a href="/developer/" class="nav-link" style="text-decoration: none; color: inherit;">
-                    <span>Developers</span>
+            <li>
+                <a href="{% url "accessibility" %}" class="nav-link">
+                    <span>{% trans "Accessibility" %}</span>
                 </a>
             </li>
-            <li style="margin-bottom: 10px;">
-                <a href="/about/" class="nav-link" style="text-decoration: none; color: inherit;">
-                    <span>About</span>
+            <li>
+                <a href="{% url "legal-notice" %}" class="nav-link">
+                    <span>{% trans "Legal notice" %}</span>
                 </a>
+            </li>
+            <li>
+                <a href="{% url "privacy-cookies" %}" class="nav-link">
+                    <span>{% trans "Privacy &#038; Cookies Policy" %}</span>
+                </a>
+            </li>
+            <li title="What is Horizon 2020?">
+                <div class="footer-logo" style="display: inline-block; margin: 10px;">
+                    <a href="https://doi.org/10.3030/101000289">
+                        <img src="{% static 'subsites/logo_EU.svg' %}" alt="EU flag and funding info"
+                            style="max-height: 35px; width: auto;">
+                    </a>
+                </div>
             </li>
         </ul>
     </div>
-</footer> -->
+    {% endblock %}
+    {% block funding_info %}
+    {% endblock %}
+</footer>
