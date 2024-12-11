@@ -6,13 +6,12 @@ def run_setup_hooks(*args, **kwargs):
     from django.conf import settings
     from django.views.generic import TemplateView
     from geonode.urls import urlpatterns, re_path
-
+    from subsites.views import SubsiteCatalogueViewSet
+    
     LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
     template_dir = os.path.join(LOCAL_ROOT, "templates")
     settings.TEMPLATES[0]["DIRS"].insert(0, template_dir)
-
-    from subsites.views import SubsiteCatalogueViewSet
-
+    
     custom_url_patterns = [
         re_path(
             r"^legal_notice/$",
