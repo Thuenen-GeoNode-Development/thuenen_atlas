@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if menu_item %}
-    {% if menu_item.type == 'link' %}
+    {% if menu_item.type == 'link' and menu_item.label != 'Atlanten'%}
         <li>
             <a
                 id="{{ menu_item.label | slugify }}"
