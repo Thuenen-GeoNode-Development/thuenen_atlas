@@ -1,7 +1,7 @@
 ARG BASE_IMAGE_VERSION
 #FROM geonode/geoserver:${BASE_IMAGE_VERSION}
 #FROM geonode/geoserver:2.24.2-v1
-FROM geonode/geoserver:2.24.4-v1
+FROM geonode/geoserver:2.27.1-latest
 
 ## GeoServer plugins
 #
